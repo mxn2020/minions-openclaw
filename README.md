@@ -3,7 +3,7 @@
 [![CI](https://github.com/minions-openclaw/minions-openclaw/actions/workflows/ci.yml/badge.svg)](https://github.com/minions-openclaw/minions-openclaw/actions/workflows/ci.yml)
 [![npm version](https://badge.fury.io/js/@minions-openclaw%2Fcore.svg)](https://www.npmjs.com/package/@minions-openclaw/core)
 [![PyPI version](https://badge.fury.io/py/minions-openclaw.svg)](https://pypi.org/project/minions-openclaw/)
-[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](LICENSE)
 
 A production-quality monorepo for managing **OpenClaw Gateway** instances using [minions-sdk](https://www.npmjs.com/package/minions-sdk) for structured data management.
 
@@ -235,4 +235,4 @@ pytest tests/ -v
 
 ## License
 
-[GNU Affero General Public License v3.0](LICENSE) — see [LICENSE](LICENSE) for details.
+[MIT](LICENSE) — see [LICENSE](LICENSE) for details.
