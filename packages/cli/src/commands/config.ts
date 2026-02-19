@@ -60,8 +60,8 @@ configCommand
 configCommand
   .command('export <instanceId>')
   .description('Export configuration as JSON')
-  .option('--format <format>', 'Output format', 'json')
-  .action(async (instanceId: string, _options: { format: string }) => {
+  .option('--format <format>', 'Output format (json or pretty)', 'json')
+  .action(async (instanceId: string, options: { format: string }) => {
     const snapshotManager = new SnapshotManager();
     const latest = await snapshotManager.getLatestSnapshot(instanceId);
     if (!latest) {
@@ -69,7 +69,15 @@ configCommand
       return;
     }
     const config = latest.fields['config'] as string;
-    console.log(config);
+    if (options.format === 'pretty') {
+      try {
+        console.log(JSON.stringify(JSON.parse(config), null, 2));
+      } catch {
+        console.log(config);
+      }
+    } else {
+      console.log(config);
+    }
   });
 
 configCommand
