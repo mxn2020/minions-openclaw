@@ -101,6 +101,11 @@ export class GatewayClient {
     }
   }
 
+  /**
+   * Sign the challenge nonce using RSA PKCS1v15 with SHA-256.
+   * PKCS1v15 is used here for broad compatibility with existing gateway
+   * implementations; matches the Python gateway_client.py behaviour.
+   */
   private signChallenge(nonce: string, timestamp: string): string {
     if (!this.devicePrivateKey) return '';
     try {

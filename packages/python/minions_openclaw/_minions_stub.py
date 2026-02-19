@@ -2,6 +2,10 @@
 Stub types for minions-sdk functionality.
 The PyPI 'minions' package is a different AI orchestration tool and should NOT be imported.
 These stubs provide Python equivalents of the TypeScript minions-sdk types.
+
+Version parity note: these types are modelled after minions-sdk 0.2.x.
+When a compatible 'minions' PyPI package is published, replace these stubs
+with the real imports documented at the top of each module.
 """
 from __future__ import annotations
 import uuid

@@ -63,6 +63,10 @@ class GatewayClient:
             pem = self.device_private_key.encode()
             private_key = serialization.load_pem_private_key(pem, password=None)
             message = f'{nonce}:{timestamp}'.encode()
+            # PKCS1v15 is used for compatibility with the TypeScript GatewayClient
+            # (Node.js crypto.createSign default behaviour).  Both sides must agree
+            # on the padding scheme; change to PSS here only if the gateway is
+            # updated to verify PSS signatures.
             signature = private_key.sign(message, padding.PKCS1v15(), hashes.SHA256())
             return base64.b64encode(signature).decode()
         except ImportError:
