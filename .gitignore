@@ -12,3 +12,5 @@ coverage/
 *.egg-info/
 .venv/
 venv/
+PROMPT.md
+PROMPTS.md
