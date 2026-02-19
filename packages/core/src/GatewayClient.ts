@@ -1,5 +1,6 @@
 import WebSocket from 'ws';
 import { createSign } from 'crypto';
+import { generateId } from 'minions-sdk';
 
 export interface GatewayPresence {
   agents: unknown[];
@@ -124,7 +125,7 @@ export class GatewayClient {
         reject(new Error('Not connected'));
         return;
       }
-      const id = Math.random().toString(36).slice(2);
+      const id = generateId();
       const timeout = setTimeout(() => reject(new Error(`Timeout calling ${method}`)), 10000);
 
       const handler = (data: WebSocket.RawData) => {
