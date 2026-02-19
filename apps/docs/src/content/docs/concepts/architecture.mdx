@@ -1,0 +1,26 @@
+---
+title: Architecture
+description: How Minions OpenClaw is structured
+---
+
+## Overview
+
+Minions OpenClaw uses a monorepo structure with three main packages:
+
+- **@minions-openclaw/core** — TypeScript library with all business logic
+- **@minions-openclaw/cli** — Command-line interface built on Commander.js
+- **minions-openclaw (Python)** — Python SDK with equivalent functionality
+
+## Key Components
+
+### InstanceManager
+Manages the lifecycle of OpenClaw Gateway instances.
+
+### GatewayClient
+WebSocket client implementing the OpenClaw connection protocol.
+
+### ConfigDecomposer
+Parses openclaw.json configuration into a tree of minions.
+
+### SnapshotManager
+Captures and compares point-in-time state snapshots.
