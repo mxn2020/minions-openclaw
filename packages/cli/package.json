@@ -7,10 +7,11 @@
   },
   "scripts": {
     "build": "tsc",
+    "lint": "tsc --noEmit",
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@minions-openclaw/core": "*",
+    "@minions-openclaw/core": "workspace:*",
     "commander": "^12.0.0",
     "ws": "^8.0.0",
     "chalk": "^5.0.0",

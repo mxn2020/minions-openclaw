@@ -7,9 +7,10 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present"
+    "build": "pnpm --filter @minions-openclaw/core run build && pnpm --filter @minions-openclaw/cli run build && pnpm --filter @minions-openclaw/docs run build",
+    "test": "pnpm --filter @minions-openclaw/core run test",
+    "lint": "pnpm --filter @minions-openclaw/core run build && pnpm --filter @minions-openclaw/core run lint && pnpm --filter @minions-openclaw/cli run lint",
+    "deploy:docs": "pnpm --filter @minions-openclaw/docs run build && netlify deploy --dir apps/docs/dist --prod --no-build"
   },
   "license": "MIT"
 }

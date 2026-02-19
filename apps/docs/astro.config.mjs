@@ -5,7 +5,9 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Minions OpenClaw',
-      social: { github: 'https://github.com/minions-openclaw/minions-openclaw' },
+      social: [
+        { icon: 'github', label: 'GitHub', href: 'https://github.com/minions-openclaw/minions-openclaw' },
+      ],
       sidebar: [
         { label: 'Getting Started', link: '/getting-started' },
         { label: 'Concepts', autogenerate: { directory: 'concepts' } },

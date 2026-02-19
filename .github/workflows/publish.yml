@@ -1,57 +1,81 @@
-name: Publish
+name: Publish Packages
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'v*'
 
+permissions:
+  contents: read
+
 jobs:
   publish-npm:
-    name: Publish to npm
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
+          version: 9
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
       - name: Install dependencies
-        run: npm install
-      - name: Build core
-        run: npm run build -w packages/core
-      - name: Build cli
-        run: npm run build -w packages/cli
-      - name: Publish core
-        run: npm publish --access public
-        working-directory: packages/core
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Publish cli
-        run: npm publish --access public
-        working-directory: packages/cli
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Test
+        run: pnpm run test
+
+      - name: Publish @minions-openclaw/core
+        run: pnpm --filter @minions-openclaw/core publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  publish-pypi:
-    name: Publish to PyPI
+      - name: Publish @minions-openclaw/cli
+        run: pnpm --filter @minions-openclaw/cli publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-python:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
+
       - name: Install build tools
-        run: pip install build twine
+        run: pip install hatch
+
+      - name: Run tests
+        working-directory: packages/python
+        run: |
+          pip install -e ".[test]"
+          pytest -v
+
       - name: Build package
-        run: python -m build
         working-directory: packages/python
+        run: hatch build
+
       - name: Publish to PyPI
-        run: twine upload dist/*
-        working-directory: packages/python
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/python/dist/
+          password: ${{ secrets.PYPI_TOKEN }}

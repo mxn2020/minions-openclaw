@@ -6,40 +6,60 @@ on:
   pull_request:
     branches: [main]
 
-jobs:
-  typescript:
-    name: TypeScript Build & Test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm install
-      - name: Build core
-        run: npm run build -w packages/core
-      - name: Test core
-        run: npm run test -w packages/core
+permissions:
+  contents: read
 
-  python:
-    name: Python Tests
+jobs:
+  build-and-test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+    strategy:
+      matrix:
+        node-version: [20, 22]
+
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
-          python-version: '3.11'
+          version: 9
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+
       - name: Install dependencies
-        run: |
-          cd packages/python
-          pip install -e ".[dev]"
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Build core packages
+        run: pnpm --filter @minions-openclaw/core run build && pnpm --filter @minions-openclaw/cli run build && pnpm --filter @minions-openclaw/docs run build
+
+      - name: Test
+        run: pnpm run test
+
+  python-sdk:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Python SDK
+        working-directory: packages/python
+        run: pip install -e ".[test]"
+
       - name: Run Python tests
-        run: |
-          cd packages/python
-          pytest tests/ -v
+        working-directory: packages/python
+        run: pytest -v
