@@ -1,0 +1,15 @@
+---
+title: Multi-Instance Management
+description: Managing multiple OpenClaw Gateway instances
+---
+
+## Fleet Management
+
+Minions OpenClaw manages a fleet of OpenClaw Gateway instances stored in `~/.openclaw-manager/data.json`.
+
+## Registering Multiple Instances
+
+```bash
+openclaw-manager register production --url ws://prod.example.com:8080 --token prod-token
+openclaw-manager register staging --url ws://staging.example.com:8080 --token staging-token
+```
