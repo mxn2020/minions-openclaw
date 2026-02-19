@@ -2,8 +2,6 @@
 from __future__ import annotations
 import asyncio
 import json
-import hashlib
-import hmac
 import base64
 from typing import Any, Dict, Optional
 
@@ -59,10 +57,17 @@ class GatewayClient:
         if not self.device_private_key:
             return ''
         try:
-            key = self.device_private_key.encode()
-            msg_bytes = f'{nonce}:{timestamp}'.encode()
-            sig = hmac.new(key, msg_bytes, hashlib.sha256).digest()
-            return base64.b64encode(sig).decode()
+            from cryptography.hazmat.primitives import hashes, serialization
+            from cryptography.hazmat.primitives.asymmetric import padding
+
+            pem = self.device_private_key.encode()
+            private_key = serialization.load_pem_private_key(pem, password=None)
+            message = f'{nonce}:{timestamp}'.encode()
+            signature = private_key.sign(message, padding.PKCS1v15(), hashes.SHA256())
+            return base64.b64encode(signature).decode()
+        except ImportError:
+            # cryptography package not installed — fall back to no signature
+            return ''
         except Exception:
             return ''
 

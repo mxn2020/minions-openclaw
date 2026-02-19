@@ -27,7 +27,9 @@ async def main():
 
     snapshot = snapshot_manager.capture_snapshot(instance.id, presence)
     print(f'Snapshot captured: {snapshot.id}')
-    print(f"Agents: {presence['agents']}")
+    print(f"Agents: {len(presence.get('agents', []))}")
+    print(f"Channels: {len(presence.get('channels', []))}")
+    print(f"Models: {len(presence.get('models', []))}")
 
 
 if __name__ == '__main__':
