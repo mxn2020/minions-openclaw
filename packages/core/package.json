@@ -18,7 +18,7 @@
     "docs": "typedoc"
   },
   "dependencies": {
-    "minions-sdk": "^0.2.0",
+    "minions-sdk": "^0.2.1",
     "ws": "^8.19.0"
   },
   "devDependencies": {
