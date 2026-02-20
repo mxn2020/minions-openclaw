@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeEach, afterEach } from 'vitest';
 import { InstanceManager } from '../src/InstanceManager.js';
 import { promises as fs } from 'fs';
 import { join } from 'path';

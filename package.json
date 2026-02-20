@@ -7,10 +7,15 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "pnpm --filter @minions-openclaw/core run build && pnpm --filter @minions-openclaw/cli run build && pnpm --filter @minions-openclaw/docs run build",
+    "build": "pnpm --filter @minions-openclaw/core run build && pnpm --filter @minions-openclaw/cli run build && pnpm --filter @minions-openclaw/docs run build && pnpm --filter @minions-openclaw/web run build",
     "test": "pnpm --filter @minions-openclaw/core run test",
     "lint": "pnpm --filter @minions-openclaw/core run build && pnpm --filter @minions-openclaw/core run lint && pnpm --filter @minions-openclaw/cli run lint",
-    "deploy:docs": "pnpm --filter @minions-openclaw/docs run build && netlify deploy --dir apps/docs/dist --prod --no-build"
+    "deploy:docs": "pnpm --filter @minions-openclaw/docs run build && netlify deploy --dir apps/docs/dist --prod --no-build",
+    "deploy:web": "pnpm --filter @minions-openclaw/web run build && netlify deploy --dir apps/web/dist --prod --no-build",
+    "deploy": "pnpm run deploy:docs && pnpm run deploy:web"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "license": "MIT"
 }

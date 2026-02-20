@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeEach } from 'vitest';
 import { ConfigDecomposer } from '../src/ConfigDecomposer.js';
 import { generateId } from 'minions-sdk';
 

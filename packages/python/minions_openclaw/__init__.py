@@ -1,9 +1,4 @@
-"""
-minions_openclaw - Python SDK for managing OpenClaw Gateway instances.
-
-Note: This package uses internal stub types (_minions_stub) instead of the
-PyPI 'minions' package, which is a different AI orchestration tool.
-"""
+"""minions_openclaw - Python SDK for managing OpenClaw Gateway instances."""
 from .types import (
     registry,
     openclaw_instance_type,
@@ -30,7 +25,7 @@ from .instance_manager import InstanceManager
 from .config_decomposer import ConfigDecomposer
 from .snapshot_manager import SnapshotManager
 from .gateway_client import GatewayClient
-from ._minions_stub import (
+from minions_sdk import (
     Minion,
     MinionType,
     Relation,

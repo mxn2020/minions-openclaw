@@ -1,5 +1,7 @@
 import { createMinion, generateId } from 'minions-sdk';
 import type { Minion, Relation, MinionType } from 'minions-sdk';
+import { homedir } from 'os';
+import { join } from 'path';
 import {
   openclawAgentType,
   openclawChannelType,
@@ -19,6 +21,29 @@ import {
   openclawUiConfigType,
 } from './types.js';
 import { promises as fs } from 'fs';
+
+const DATA_DIR = join(homedir(), '.openclaw-manager');
+const DATA_FILE = join(DATA_DIR, 'data.json');
+
+interface StorageData {
+  minions: Minion[];
+  relations: Relation[];
+}
+
+async function readStorage(): Promise<StorageData> {
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    const raw = await fs.readFile(DATA_FILE, 'utf-8');
+    return JSON.parse(raw) as StorageData;
+  } catch {
+    return { minions: [], relations: [] };
+  }
+}
+
+async function writeStorage(data: StorageData): Promise<void> {
+  await fs.mkdir(DATA_DIR, { recursive: true });
+  await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+}
 
 export interface OpenClawConfig {
   agents?: Array<{ name: string; model: string; systemPrompt?: string; tools?: string[]; channels?: string[]; skills?: string[]; enabled?: boolean }>;
@@ -213,5 +238,110 @@ export class ConfigDecomposer {
     }
 
     return { minions, relations };
+  }
+
+  async compose(instanceId: string, storage?: StorageData): Promise<OpenClawConfig> {
+    const data = storage ?? await readStorage();
+
+    const childIds = data.relations
+      .filter(r => r.sourceId === instanceId && r.type === 'parent_of')
+      .map(r => r.targetId);
+
+    const children = data.minions.filter(m => childIds.includes(m.id) && !m.deletedAt);
+
+    const typeMap: Record<string, string> = {
+      [openclawAgentType.id]: 'agents',
+      [openclawChannelType.id]: 'channels',
+      [openclawModelProviderType.id]: 'modelProviders',
+      [openclawSkillType.id]: 'skills',
+      [openclawToolConfigType.id]: 'tools',
+      [openclawSessionConfigType.id]: 'sessionConfig',
+      [openclawGatewayConfigType.id]: 'gatewayConfig',
+      [openclawTalkConfigType.id]: 'talkConfig',
+      [openclawBrowserConfigType.id]: 'browserConfig',
+      [openclawHookType.id]: 'hooks',
+      [openclawCronJobType.id]: 'cronJobs',
+      [openclawDiscoveryConfigType.id]: 'discoveryConfig',
+      [openclawIdentityConfigType.id]: 'identityConfig',
+      [openclawCanvasConfigType.id]: 'canvasConfig',
+      [openclawLoggingConfigType.id]: 'loggingConfig',
+      [openclawUiConfigType.id]: 'uiConfig',
+    };
+
+    const arrayKeys = new Set(['agents', 'channels', 'modelProviders', 'skills', 'tools', 'hooks', 'cronJobs']);
+    const config: Record<string, unknown> = {};
+
+    for (const child of children) {
+      const key = typeMap[child.minionTypeId];
+      if (!key) continue;
+
+      const fields: Record<string, unknown> = {};
+      for (const [k, v] of Object.entries(child.fields)) {
+        if (typeof v === 'string') {
+          try { fields[k] = JSON.parse(v); } catch { fields[k] = v; }
+        } else {
+          fields[k] = v;
+        }
+      }
+
+      if (arrayKeys.has(key)) {
+        if (!config[key]) config[key] = [];
+        (config[key] as unknown[]).push(fields);
+      } else {
+        config[key] = fields;
+      }
+    }
+
+    return config as OpenClawConfig;
+  }
+
+  async saveComposed(instanceId: string, config: OpenClawConfig): Promise<void> {
+    const storage = await readStorage();
+    const { minions, relations } = this.decompose(config, instanceId);
+    storage.minions.push(...minions);
+    storage.relations.push(...relations);
+    await writeStorage(storage);
+  }
+
+  diff(
+    configA: OpenClawConfig,
+    configB: OpenClawConfig,
+  ): { added: Partial<OpenClawConfig>; removed: Partial<OpenClawConfig>; changed: Partial<OpenClawConfig> } {
+    const added: Record<string, unknown> = {};
+    const removed: Record<string, unknown> = {};
+    const changed: Record<string, unknown> = {};
+
+    const arrayKeys: Array<keyof OpenClawConfig> = ['agents', 'channels', 'modelProviders', 'skills', 'tools', 'hooks', 'cronJobs'];
+    const singletonKeys: Array<keyof OpenClawConfig> = ['sessionConfig', 'gatewayConfig', 'talkConfig', 'browserConfig', 'discoveryConfig', 'identityConfig', 'canvasConfig', 'loggingConfig', 'uiConfig'];
+
+    for (const key of arrayKeys) {
+      const a = (configA[key] as Array<{ name?: string }> | undefined) ?? [];
+      const b = (configB[key] as Array<{ name?: string }> | undefined) ?? [];
+      const aNames = new Set(a.map(item => item.name ?? JSON.stringify(item)));
+      const bNames = new Set(b.map(item => item.name ?? JSON.stringify(item)));
+      const addedItems = b.filter(item => !aNames.has(item.name ?? JSON.stringify(item)));
+      const removedItems = a.filter(item => !bNames.has(item.name ?? JSON.stringify(item)));
+      if (addedItems.length) added[key] = addedItems;
+      if (removedItems.length) removed[key] = removedItems;
+    }
+
+    for (const key of singletonKeys) {
+      const a = configA[key] as Record<string, unknown> | undefined;
+      const b = configB[key] as Record<string, unknown> | undefined;
+      if (!a && b) { added[key] = b; continue; }
+      if (a && !b) { removed[key] = a; continue; }
+      if (a && b) {
+        const changedFields: Record<string, unknown> = {};
+        const allKeys = new Set([...Object.keys(a), ...Object.keys(b)]);
+        for (const k of allKeys) {
+          if (JSON.stringify(a[k]) !== JSON.stringify(b[k])) {
+            changedFields[k] = { from: a[k], to: b[k] };
+          }
+        }
+        if (Object.keys(changedFields).length) changed[key] = changedFields;
+      }
+    }
+
+    return { added: added as Partial<OpenClawConfig>, removed: removed as Partial<OpenClawConfig>, changed: changed as Partial<OpenClawConfig> };
   }
 }

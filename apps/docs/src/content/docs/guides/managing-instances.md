@@ -1,0 +1,104 @@
+---
+title: Managing Instances
+description: Full CLI and SDK workflow for registering, pinging, listing, and removing OpenClaw instances.
+---
+
+# Managing Instances
+
+## CLI Workflow
+
+### Register
+
+```bash
+openclaw-manager instance register <name> --url <ws-url> [--token <token>]
+```
+
+**Examples:**
+
+```bash
+# Basic registration
+openclaw-manager instance register home --url ws://192.168.1.10:3001 --token abc123
+
+# With RSA device keys
+openclaw-manager instance register office \
+  --url wss://office.example.com:3001 \
+  --token abc123 \
+  --private-key "$(cat ~/.openclaw/device.pem)" \
+  --public-key "$(cat ~/.openclaw/device.pub.pem)"
+```
+
+### List
+
+```bash
+openclaw-manager instance list
+```
+
+Output:
+```
+ID           Name    URL                          Status        Last Ping
+──────────────────────────────────────────────────────────────────────────
+abc-123      home    ws://192.168.1.10:3001       registered    —
+def-456      office  wss://office.example.com     reachable     2s ago
+```
+
+### Ping
+
+```bash
+openclaw-manager instance ping <id>
+```
+
+Ping updates `lastPingAt`, `lastPingLatencyMs`, and `version` fields in storage.
+
+### Remove
+
+```bash
+openclaw-manager instance remove <id>
+```
+
+Soft-deletes the instance Minion (sets `deletedAt`). Snapshots are unaffected.
+
+## TypeScript SDK
+
+```typescript
+import { InstanceManager } from '@minions-openclaw/core';
+
+const manager = new InstanceManager();
+
+// Register
+const instance = await manager.register('home', 'ws://192.168.1.10:3001', 'token123');
+console.log('Registered:', instance.id);
+
+// List
+const all = await manager.listInstances();
+all.forEach(i => console.log(i.fields.url));
+
+// Ping
+const result = await manager.ping(instance.id);
+console.log('Latency:', result.latencyMs, 'ms');
+
+// Remove
+await manager.remove(instance.id);
+```
+
+## Python SDK
+
+```python
+from minions_openclaw import InstanceManager
+
+manager = InstanceManager()
+
+instance = manager.register('home', 'ws://192.168.1.10:3001', token='token123')
+print('Registered:', instance.id)
+
+instances = manager.list()
+for inst in instances:
+    print(inst.fields['url'])
+
+manager.remove(instance.id)
+```
+
+## Multi-Instance Tips
+
+- Each instance gets a unique UUID; use the CLI's `list` output to copy IDs for subsequent commands.
+- All instance data is stored in `~/.openclaw-manager/data.json` — back this up if you manage many gateways.
+- Use `--json` flag (where supported) to script against the output: `openclaw-manager instance list --json | jq '.[] | .id'`

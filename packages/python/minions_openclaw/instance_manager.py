@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import List, Optional, Dict, Any
 
-from ._minions_stub import Minion, Relation, create_minion, soft_delete, generate_id, now
+from minions_sdk import Minion, Relation, create_minion, soft_delete, generate_id, now
 from .types import openclaw_instance_type
 
 DATA_DIR = Path.home() / '.openclaw-manager'

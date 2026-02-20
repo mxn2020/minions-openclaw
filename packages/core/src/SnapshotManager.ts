@@ -101,6 +101,47 @@ export class SnapshotManager {
     return snapshots[0];
   }
 
+  async getHistory(instanceId: string): Promise<Minion[]> {
+    const storage = await readStorage();
+    const snapshotIds = storage.relations
+      .filter(r => r.sourceId === instanceId && r.type === 'parent_of')
+      .map(r => r.targetId);
+    const snapshots = storage.minions.filter(
+      m => snapshotIds.includes(m.id) && m.minionTypeId === openclawSnapshotType.id && !m.deletedAt
+    );
+
+    // Walk the follows chain to order newest → oldest
+    const followsMap = new Map<string, string>();
+    for (const r of storage.relations) {
+      if (r.type === 'follows' && snapshotIds.includes(r.sourceId)) {
+        followsMap.set(r.sourceId, r.targetId);
+      }
+    }
+
+    // Find the head: the snapshot not referenced as a target in any follows relation
+    const targets = new Set(followsMap.values());
+    const head = snapshots.find(s => !targets.has(s.id));
+    if (!head) return snapshots.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+    const ordered: Minion[] = [];
+    const byId = new Map(snapshots.map(s => [s.id, s]));
+    let current: Minion | undefined = head;
+    while (current) {
+      ordered.push(current);
+      const nextId = followsMap.get(current.id);
+      current = nextId ? byId.get(nextId) : undefined;
+    }
+    return ordered;
+  }
+
+  async compare(snapshotId1: string, snapshotId2: string): Promise<Record<string, { from: unknown; to: unknown }>> {
+    const storage = await readStorage();
+    const a = storage.minions.find(m => m.id === snapshotId1);
+    const b = storage.minions.find(m => m.id === snapshotId2);
+    if (!a || !b) throw new Error(`Snapshot not found: ${!a ? snapshotId1 : snapshotId2}`);
+    return this.diffSnapshots(a, b);
+  }
+
   diffSnapshots(a: Minion, b: Minion): Record<string, { from: unknown; to: unknown }> {
     const diff: Record<string, { from: unknown; to: unknown }> = {};
     const allKeys = new Set([...Object.keys(a.fields), ...Object.keys(b.fields)]);

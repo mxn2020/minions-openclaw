@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { registry, openclawInstanceType, allOpenClawTypes } from '../src/types.js';
 
 describe('OpenClaw Types', () => {

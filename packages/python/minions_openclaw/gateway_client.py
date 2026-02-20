@@ -78,7 +78,7 @@ class GatewayClient:
     async def call(self, method: str, params: Optional[Dict[str, Any]] = None) -> Any:
         if not self._ws:
             raise RuntimeError("Not connected")
-        from ._minions_stub import generate_id
+        from minions_sdk import generate_id
         call_id = generate_id()
         await self._ws.send(json.dumps({'type': 'call', 'id': call_id, 'method': method, 'params': params or {}}))
         while True:
