@@ -7,7 +7,8 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "pnpm --filter @minions-openclaw/sdk run build && pnpm --filter @minions-openclaw/cli run build && pnpm --filter @minions-openclaw/docs run build && pnpm --filter @minions-openclaw/web run build",
+    "build": "pnpm --filter @minions-openclaw/sdk run build && pnpm --filter @minions-openclaw/cli run build && pnpm --filter @minions-openclaw/docs run build && pnpm --filter minions-openclaw-blog run build && pnpm --filter @minions-openclaw/web run build",
+    "deploy:blog": "pnpm --filter minions-openclaw-blog run build && netlify deploy --dir apps/blog/dist --prod",
     "test": "pnpm --filter @minions-openclaw/sdk run test",
     "lint": "pnpm --filter @minions-openclaw/sdk run build && pnpm --filter @minions-openclaw/sdk run lint && pnpm --filter @minions-openclaw/cli run lint"
   },
