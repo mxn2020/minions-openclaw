@@ -22,3 +22,5 @@ export type {
   ValidationError,
   ValidationResult,
 } from 'minions-sdk';
+
+export * from './client/index.js';

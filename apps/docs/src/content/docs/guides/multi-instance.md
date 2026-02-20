@@ -1,0 +1,187 @@
+---
+title: Managing Multiple Gateway Instances
+description: How to register, manage, and switch between multiple OpenClaw gateway instances.
+---
+
+## Overview
+
+A single installation of `minions-openclaw` can manage any number of gateway instances simultaneously. Instances can represent different environments (dev, staging, production), different physical locations, or different projects. Each instance has its own device credentials and snapshot history stored in `~/.openclaw-manager/data.json`.
+
+---
+
+## Registering multiple instances
+
+```typescript
+import { InstanceManager } from '@minions-openclaw/core';
+
+const manager = new InstanceManager();
+
+const devInstance = await manager.register({
+  url: 'ws://localhost:3000',
+  label: 'local-dev',
+});
+
+const stagingInstance = await manager.register({
+  url: 'wss://staging.gateway.example.com',
+  label: 'staging',
+});
+
+const prodInstance = await manager.register({
+  url: 'wss://gateway.example.com',
+  label: 'production',
+});
+
+console.log('Registered instances:');
+console.log(' - dev:', devInstance.id);
+console.log(' - staging:', stagingInstance.id);
+console.log(' - production:', prodInstance.id);
+```
+
+Each call to `register()` performs an independent key generation and device registration handshake. The three instances share no credentials.
+
+---
+
+## Listing all instances
+
+```typescript
+const instances = await manager.list();
+
+for (const inst of instances) {
+  const label = inst.fields.label ?? inst.id;
+  const status = inst.fields.status ?? 'unknown';
+  const latency = inst.fields.lastPingLatencyMs;
+  console.log(`${label}: ${status}${latency ? ` (${latency}ms)` : ''}`);
+}
+```
+
+```python
+from minions_openclaw import InstanceManager
+
+manager = InstanceManager()
+instances = manager.list()
+
+for inst in instances:
+    label = inst.fields.get("label", inst.id)
+    status = inst.fields.get("status", "unknown")
+    print(f"{label}: {status}")
+```
+
+---
+
+## Pinging all instances
+
+Use `manager.ping()` to check reachability across all registered instances:
+
+```typescript
+const instances = await manager.list();
+
+const results = await Promise.allSettled(
+  instances.map(async (inst) => {
+    const result = await manager.ping(inst.id);
+    return { label: inst.fields.label, ...result };
+  }),
+);
+
+for (const r of results) {
+  if (r.status === 'fulfilled') {
+    console.log(`${r.value.label}: ${r.value.latencyMs}ms`);
+  } else {
+    console.log(`Failed: ${r.reason.message}`);
+  }
+}
+```
+
+---
+
+## Switching between instances
+
+There is no global "active" instance — you simply pass the instance minion to `GatewayClient` or `SnapshotManager` methods. A common pattern is to define a helper that selects the target instance by label:
+
+```typescript
+async function getInstanceByLabel(label: string) {
+  const instances = await manager.list();
+  const inst = instances.find((i) => i.fields.label === label);
+  if (!inst) throw new Error(`No instance with label "${label}"`);
+  return inst;
+}
+
+// Work with staging
+const staging = await getInstanceByLabel('staging');
+const stagingClient = new GatewayClient(staging);
+await stagingClient.connect();
+const stagingConfig = await stagingClient.getConfig();
+
+// Work with production
+const prod = await getInstanceByLabel('production');
+const prodClient = new GatewayClient(prod);
+await prodClient.connect();
+const prodConfig = await prodClient.getConfig();
+```
+
+---
+
+## Comparing instances
+
+To see what differs between two live gateways, capture a snapshot from each and diff them:
+
+```typescript
+import { SnapshotManager } from '@minions-openclaw/core';
+
+const snapshots = new SnapshotManager();
+
+// Capture from staging
+const stagingClient = new GatewayClient(stagingInstance);
+await stagingClient.connect();
+const stagingSnap = await snapshots.capture(stagingInstance.id, stagingClient);
+
+// Capture from production
+const prodClient = new GatewayClient(prodInstance);
+await prodClient.connect();
+const prodSnap = await snapshots.capture(prodInstance.id, prodClient);
+
+// Diff across instances
+const diff = await snapshots.diff(stagingSnap.id, prodSnap.id);
+snapshots.printDiff(diff);
+```
+
+This is useful for promoting a staging config to production: verify the diff matches your expectations before running `restore()`.
+
+---
+
+## Promoting a config from staging to production
+
+```typescript
+// 1. Capture staging config
+const stagingSnap = await snapshots.capture(stagingInstance.id, stagingClient);
+
+// 2. Review the diff against current production
+const currentProdSnap = await snapshots.capture(prodInstance.id, prodClient);
+const diff = await snapshots.diff(currentProdSnap.id, stagingSnap.id);
+snapshots.printDiff(diff);
+
+// 3. If the diff looks correct, restore staging config to production
+await snapshots.restore(stagingSnap.id, prodClient);
+console.log('Production updated to match staging');
+```
+
+---
+
+## Removing an instance
+
+When a gateway is decommissioned, remove it from local storage:
+
+```typescript
+await manager.remove(prodInstance.id);
+// Removes the instance and all its associated snapshots from data.json
+```
+
+This does not revoke the device on the gateway side. To revoke, call `devices.revoke` via `GatewayClient` before removing (see the [Authentication Guide](/guides/authentication/)).
+
+---
+
+## Tips for large fleets
+
+- **Use labels consistently**: establish a naming convention (`<env>-<region>`, e.g., `prod-us-east`) so scripts can target instances reliably.
+- **Automate health checks**: schedule `manager.ping()` calls in a cron job and alert on failures.
+- **Snapshot before changes**: always capture a snapshot before pushing a new config to any instance so you have a restore point.
+- **Use a shared `dataDir`** on team machines: set `dataDir` to a shared network path so the whole team can access the same instance registry (ensure the file is not world-readable due to the private key content).

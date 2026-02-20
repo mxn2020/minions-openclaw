@@ -35,9 +35,9 @@ from minions import (
     TypeRegistry,
     generate_id,
     now,
-    create_minion,
     soft_delete,
 )
+from .client import OpenClawPlugin, MinionsOpenClaw
 
 __version__ = '0.1.0'
 __all__ = [
@@ -76,4 +76,6 @@ __all__ = [
     'now',
     'create_minion',
     'soft_delete',
+    'OpenClawPlugin',
+    'MinionsOpenClaw',
 ]

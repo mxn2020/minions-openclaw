@@ -1,0 +1,13 @@
+{
+  "agents": [
+    { "name": "FixtureAgent", "model": "gpt-4", "enabled": true }
+  ],
+  "channels": [
+    { "type": "slack", "name": "general", "enabled": true }
+  ],
+  "sessionConfig": {
+    "maxSessions": 10,
+    "sessionTimeout": 3600,
+    "persistSessions": false
+  }
+}

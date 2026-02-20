@@ -7,45 +7,13 @@ import { AgentsList } from '../components/dashboard/AgentsList';
 import { ChannelsList } from '../components/dashboard/ChannelsList';
 import { ModelsList } from '../components/dashboard/ModelsList';
 import { ConfigViewer } from '../components/dashboard/ConfigViewer';
-
-// Demo data for the dashboard UI (read-only display)
-const DEMO_INSTANCES = [
-    {
-        id: 'inst-001',
-        title: 'Home Gateway',
-        fields: { url: 'ws://192.168.1.10:3001', status: 'reachable', lastPingAt: new Date().toISOString(), lastPingLatencyMs: 12 },
-        createdAt: new Date(Date.now() - 3600000).toISOString(),
-    },
-    {
-        id: 'inst-002',
-        title: 'Office Gateway',
-        fields: { url: 'wss://office.example.com:3001', status: 'registered' },
-        createdAt: new Date(Date.now() - 86400000).toISOString(),
-    },
-];
-
-const DEMO_SNAPSHOTS = [
-    { id: 'snap-003', fields: { agentCount: 5, channelCount: 3, modelCount: 2, config: '{}' }, createdAt: new Date().toISOString() },
-    { id: 'snap-002', fields: { agentCount: 4, channelCount: 3, modelCount: 1, config: '{}' }, createdAt: new Date(Date.now() - 900000).toISOString() },
-    { id: 'snap-001', fields: { agentCount: 3, channelCount: 2, modelCount: 1, config: '{}' }, createdAt: new Date(Date.now() - 1800000).toISOString() },
-];
-
-const DEMO_AGENTS = [
-    { name: 'assistant', model: 'gpt-4o', enabled: true },
-    { name: 'researcher', model: 'claude-sonnet-4-6', enabled: true },
-    { name: 'coder', model: 'gpt-4o', enabled: false },
-];
-
-const DEMO_CHANNELS = [
-    { name: 'web-ui', type: 'http', enabled: true },
-    { name: 'slack', type: 'slack', enabled: true },
-    { name: 'discord', type: 'discord', enabled: false },
-];
-
-const DEMO_MODELS = [
-    { provider: 'openai', model: 'gpt-4o', enabled: true },
-    { provider: 'anthropic', model: 'claude-sonnet-4-6', enabled: true },
-];
+import {
+    DEMO_INSTANCES,
+    DEMO_SNAPSHOTS,
+    DEMO_AGENTS,
+    DEMO_CHANNELS,
+    DEMO_MODELS,
+} from '../lib/examples';
 
 const TABS = ['Agents', 'Channels', 'Models', 'Config'] as const;
 type Tab = typeof TABS[number];

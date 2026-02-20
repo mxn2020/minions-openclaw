@@ -16,11 +16,19 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Tutorial',
+          items: [
+            { label: 'Gateway Setup', link: '/tutorial/gateway-setup/' },
+          ],
+        },
+        {
           label: 'Concepts',
           items: [
             { label: 'Instances', link: '/concepts/instances/' },
             { label: 'Snapshots', link: '/concepts/snapshots/' },
             { label: 'Config Decomposition', link: '/concepts/config-decomposition/' },
+            { label: 'Security Model', link: '/concepts/security-model/' },
+            { label: 'Data Storage', link: '/concepts/data-storage/' },
           ],
         },
         {
@@ -29,6 +37,19 @@ export default defineConfig({
             { label: 'Managing Instances', link: '/guides/managing-instances/' },
             { label: 'Snapshot Workflow', link: '/guides/snapshot-workflow/' },
             { label: 'Config Management', link: '/guides/config-management/' },
+            { label: 'Authentication', link: '/guides/authentication/' },
+            { label: 'Multiple Instances', link: '/guides/multi-instance/' },
+            { label: 'Snapshot Diffing', link: '/guides/snapshot-diffing/' },
+            { label: 'Backup & Restore', link: '/guides/backup-restore/' },
+          ],
+        },
+        {
+          label: 'Reference',
+          items: [
+            { label: 'API Reference', link: '/reference/api-reference/' },
+            { label: 'Minion Types', link: '/reference/minion-types/' },
+            { label: 'Connection Protocol', link: '/reference/connection-protocol/' },
+            { label: 'Config Schema', link: '/reference/config-schema/' },
           ],
         },
         {

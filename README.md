@@ -111,52 +111,46 @@ Commands:
 ## TypeScript SDK Usage
 
 ```typescript
-import {
-  InstanceManager,
-  GatewayClient,
-  SnapshotManager,
-  ConfigDecomposer,
-} from '@minions-openclaw/sdk';
+import { MinionsOpenClaw } from '@minions-openclaw/sdk';
+
+const minions = new MinionsOpenClaw();
 
 // Register an instance
-const manager = new InstanceManager();
-const instance = await manager.register('my-gateway', 'ws://localhost:8080', 'token');
+const instance = await minions.openclaw.instances.register('my-gateway', 'ws://localhost:8080', 'token');
 
 // Connect and fetch live state
-const client = new GatewayClient(instance.fields['url'] as string, 'token');
+const client = minions.openclaw.createGatewayClient(instance.fields['url'] as string, 'token');
 await client.openConnection();
 const presence = await client.fetchPresence();
 await client.close();
 
 // Capture a snapshot
-const snapshots = new SnapshotManager();
-const snapshot = await snapshots.captureSnapshot(instance.id, presence);
+const snapshot = await minions.openclaw.snapshots.captureSnapshot(instance.id, presence);
 
 // Decompose a config file
-const decomposer = new ConfigDecomposer();
-const config = await decomposer.loadFromFile('./openclaw.json');
-const { minions, relations } = decomposer.decompose(config, instance.id);
+const config = await minions.openclaw.config.loadFromFile('./openclaw.json');
+const { minions: newMinions, relations } = minions.openclaw.config.decompose(config, instance.id);
 ```
 
 ## Python SDK Usage
 
 ```python
-from minions_openclaw import InstanceManager, GatewayClient, SnapshotManager
+from minions_openclaw import MinionsOpenClaw
 import asyncio
 
+minions = MinionsOpenClaw()
+
 # Register an instance
-manager = InstanceManager()
-instance = manager.register('my-gateway', 'ws://localhost:8080', 'token')
+instance = minions.openclaw.instances.register('my-gateway', 'ws://localhost:8080', 'token')
 
 # Async: connect and fetch state
 async def capture():
-    client = GatewayClient(instance.fields['url'], token='token')
+    client = minions.openclaw.create_gateway_client(instance.fields['url'], token='token')
     await client.open_connection()
     presence = await client.fetch_presence()
     await client.close()
 
-    snapshots = SnapshotManager()
-    snapshot = snapshots.capture_snapshot(instance.id, presence)
+    snapshot = minions.openclaw.snapshots.capture_snapshot(instance.id, presence)
     print(f'Snapshot: {snapshot.id}')
 
 asyncio.run(capture())

@@ -1,0 +1,197 @@
+---
+title: Gateway Setup Tutorial
+description: End-to-end tutorial for registering a gateway instance, capturing a snapshot, and diffing two snapshots.
+---
+
+## Prerequisites
+
+- Node.js 18+ or Python 3.10+
+- A running OpenClaw gateway (`ws://localhost:3000` or a remote instance)
+- `@minions-openclaw/core` installed
+
+```bash
+npm install @minions-openclaw/core
+# or
+pip install minions-openclaw
+```
+
+---
+
+## Step 1: Register a gateway instance
+
+An `openclaw-instance` minion stores the connection details for a single gateway. Registration involves providing the WebSocket URL and, after the first connection, persisting the device credentials returned by the handshake.
+
+### TypeScript
+
+```typescript
+import { InstanceManager } from '@minions-openclaw/core';
+
+const manager = new InstanceManager();
+
+// Register a local gateway
+const instance = await manager.register({
+  url: 'ws://localhost:3000',
+  label: 'local-dev',
+});
+
+console.log('Registered instance:', instance.id);
+console.log('Status:', instance.fields.status); // 'registered'
+```
+
+### Python
+
+```python
+from minions_openclaw import InstanceManager
+
+manager = InstanceManager()
+
+instance = manager.register(
+    url="ws://localhost:3000",
+    label="local-dev",
+)
+
+print("Registered instance:", instance.id)
+print("Status:", instance.fields["status"])
+```
+
+The `register()` method stores the instance in `~/.openclaw-manager/data.json` and initiates the device registration handshake. After a successful handshake the `deviceId`, `devicePublicKey`, and `devicePrivateKey` fields are populated automatically.
+
+---
+
+## Step 2: Connect and verify
+
+```typescript
+import { GatewayClient } from '@minions-openclaw/core';
+
+const client = new GatewayClient(instance);
+await client.connect();
+
+const ping = await client.ping();
+console.log(`Gateway responded in ${ping.latencyMs}ms`);
+// Updates instance.fields.lastPingLatencyMs in local storage
+
+await client.disconnect();
+```
+
+```python
+from minions_openclaw import GatewayClient
+
+client = GatewayClient(instance)
+await client.connect()
+
+ping = await client.ping()
+print(f"Gateway responded in {ping.latency_ms}ms")
+
+await client.disconnect()
+```
+
+---
+
+## Step 3: Capture a snapshot
+
+A snapshot is a point-in-time copy of the entire gateway configuration. Use `SnapshotManager.capture()` to retrieve the running config and persist it as an `openclaw-snapshot` minion.
+
+### TypeScript
+
+```typescript
+import { SnapshotManager } from '@minions-openclaw/core';
+
+const snapshots = new SnapshotManager();
+
+const snap1 = await snapshots.capture(instance.id, client);
+
+console.log('Snapshot ID:', snap1.id);
+console.log('Captured at:', snap1.fields.capturedAt);
+console.log('Agents found:', snap1.fields.agentCount);
+console.log('Channels found:', snap1.fields.channelCount);
+```
+
+### Python
+
+```python
+from minions_openclaw import SnapshotManager
+
+snapshots = SnapshotManager()
+
+snap1 = await snapshots.capture(instance.id, client)
+
+print("Snapshot ID:", snap1.id)
+print("Captured at:", snap1.fields["capturedAt"])
+print("Agents found:", snap1.fields["agentCount"])
+```
+
+The full config JSON is stored in `snap1.fields.config`. You can deserialise it to inspect individual sections:
+
+```typescript
+const config = JSON.parse(snap1.fields.config);
+console.log('Model providers:', config.modelProviders);
+```
+
+---
+
+## Step 4: Make a change and capture a second snapshot
+
+Simulate a configuration change on the gateway (edit `openclaw.json` and restart, or use the gateway's API), then capture a second snapshot:
+
+```typescript
+// ... make changes to your gateway config ...
+
+await client.connect(); // reconnect after gateway restart
+const snap2 = await snapshots.capture(instance.id, client);
+
+console.log('New snapshot:', snap2.id);
+```
+
+---
+
+## Step 5: Diff two snapshots
+
+`SnapshotManager.diff()` compares two snapshots and returns a structured diff object describing what was added, removed, or changed.
+
+### TypeScript
+
+```typescript
+const diff = await snapshots.diff(snap1.id, snap2.id);
+
+console.log('Added sections:', diff.added);
+console.log('Removed sections:', diff.removed);
+console.log('Changed fields:', diff.changed);
+
+// Pretty print
+snapshots.printDiff(diff);
+```
+
+```
+~ modelProviders[0].model
+  before: gpt-4o-mini
+  after:  gpt-4o
+
++ agents[2]
+  name: code-reviewer
+  model: gpt-4o
+```
+
+### Python
+
+```python
+diff = await snapshots.diff(snap1.id, snap2.id)
+
+print("Added:", diff.added)
+print("Removed:", diff.removed)
+print("Changed:", diff.changed)
+
+snapshots.print_diff(diff)
+```
+
+---
+
+## Summary
+
+You have completed the core OpenClaw workflow:
+
+1. Registered a gateway instance with `InstanceManager.register()`.
+2. Connected and verified reachability with `GatewayClient.ping()`.
+3. Captured two config snapshots with `SnapshotManager.capture()`.
+4. Compared them with `SnapshotManager.diff()` to identify what changed.
+
+From here, explore the [Authentication Guide](/guides/authentication/) to understand the RSA key flow, or the [Snapshot Diffing Guide](/guides/snapshot-diffing/) for advanced diff interpretation.

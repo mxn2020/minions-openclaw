@@ -1,0 +1,197 @@
+---
+title: Snapshot Diffing
+description: Comparing config versions with diffSnapshots and interpreting the changes.
+---
+
+## Overview
+
+A snapshot diff answers the question: "what changed between these two gateway configs?" Diffs can compare two states of the same gateway at different points in time, or two entirely different gateways. The `SnapshotManager.diff()` method produces a structured `SnapshotDiff` object that can be inspected programmatically or printed in a human-readable format.
+
+---
+
+## Capturing two snapshots to compare
+
+```typescript
+import { InstanceManager, SnapshotManager, GatewayClient } from '@minions-openclaw/core';
+
+const manager = new InstanceManager();
+const snapshots = new SnapshotManager();
+
+const instance = await manager.get('inst_abc123');
+const client = new GatewayClient(instance);
+
+// Snapshot before making changes
+await client.connect();
+const before = await snapshots.capture(instance.id, client);
+console.log('Before snapshot:', before.id);
+
+// ... apply changes to your gateway config ...
+
+// Snapshot after changes
+const after = await snapshots.capture(instance.id, client);
+console.log('After snapshot:', after.id);
+await client.disconnect();
+```
+
+---
+
+## Running the diff
+
+```typescript
+const diff = await snapshots.diff(before.id, after.id);
+```
+
+The `SnapshotDiff` object has three arrays:
+
+```typescript
+interface SnapshotDiff {
+  added: DiffEntry[];    // keys/sections present in 'after' but not 'before'
+  removed: DiffEntry[];  // keys/sections present in 'before' but not 'after'
+  changed: ChangedEntry[]; // keys/sections present in both but with different values
+}
+
+interface DiffEntry {
+  path: string;   // JSON path, e.g. 'agents[2]' or 'loggingConfig.level'
+  value: unknown; // the added or removed value
+}
+
+interface ChangedEntry {
+  path: string;
+  before: unknown;
+  after: unknown;
+}
+```
+
+---
+
+## Printing the diff
+
+```typescript
+snapshots.printDiff(diff);
+```
+
+Output format:
+
+```
++ agents[2]
+    name: code-reviewer
+    model: gpt-4o
+    enabled: true
+
+~ agents[0].model
+    before: gpt-4o-mini
+    after:  gpt-4o
+
+~ loggingConfig.level
+    before: debug
+    after:  info
+
+- channels[1]
+    name: old-webhook
+    type: webhook
+```
+
+Symbols: `+` added, `-` removed, `~` changed.
+
+---
+
+## Filtering the diff
+
+To focus on specific sections, filter the diff arrays:
+
+```typescript
+// Only show agent changes
+const agentChanges = [
+  ...diff.added.filter((e) => e.path.startsWith('agents')),
+  ...diff.removed.filter((e) => e.path.startsWith('agents')),
+  ...diff.changed.filter((e) => e.path.startsWith('agents')),
+];
+
+console.log(`${agentChanges.length} agent changes`);
+```
+
+---
+
+## Programmatic inspection
+
+Use the structured diff to drive automation:
+
+```typescript
+// Alert if a model provider was changed in production
+const modelChanges = diff.changed.filter((c) =>
+  c.path.startsWith('modelProviders') && c.path.endsWith('.model'),
+);
+
+if (modelChanges.length > 0) {
+  for (const change of modelChanges) {
+    console.warn(
+      `Model changed at ${change.path}: ${change.before} → ${change.after}`,
+    );
+  }
+  // Send a notification, fail a CI check, etc.
+}
+```
+
+---
+
+## Diffing snapshots from different instances
+
+The diff API operates on snapshot IDs, not instance IDs. You can compare snapshots from entirely different gateways:
+
+```typescript
+// Capture from staging and production
+const stagingSnap = await snapshots.capture(stagingInstance.id, stagingClient);
+const prodSnap = await snapshots.capture(prodInstance.id, prodClient);
+
+const diff = await snapshots.diff(prodSnap.id, stagingSnap.id);
+snapshots.printDiff(diff);
+// Shows what staging has that production does not — useful for promotion review
+```
+
+---
+
+## Diffing from the CLI
+
+```bash
+# List snapshots for an instance
+minions-openclaw snapshots list --instance inst_abc123
+
+# Diff two snapshots by ID
+minions-openclaw snapshots diff snap_before snap_after
+
+# Output diff as JSON for scripting
+minions-openclaw snapshots diff snap_before snap_after --json | jq '.changed'
+```
+
+---
+
+## Interpreting common changes
+
+| Path pattern | Meaning |
+|---|---|
+| `agents[N]` | An agent was added or removed |
+| `agents[N].model` | An agent's underlying model changed |
+| `modelProviders[N].apiKey` | An API key was rotated |
+| `loggingConfig.level` | Log verbosity changed |
+| `gatewayConfig.port` | Gateway listen port changed |
+| `hooks[N]` | A webhook was added or removed |
+| `cronJobs[N].schedule` | A scheduled job's timing changed |
+
+---
+
+## Using diffs as a change audit trail
+
+Because every snapshot is stored permanently in `data.json`, you can reconstruct the full history of changes for an instance:
+
+```typescript
+const allSnapshots = await snapshots.list(instance.id);
+// Returns snapshots sorted by capturedAt ascending
+
+for (let i = 1; i < allSnapshots.length; i++) {
+  const diff = await snapshots.diff(allSnapshots[i - 1].id, allSnapshots[i].id);
+  const ts = allSnapshots[i].fields.capturedAt;
+  const totalChanges = diff.added.length + diff.removed.length + diff.changed.length;
+  console.log(`${ts}: ${totalChanges} changes`);
+  snapshots.printDiff(diff);
+}
+```
