@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@codemirror/lang-json": "^6.0.2",
-    "@minions-openclaw/core": "workspace:*",
+    "@minions-openclaw/sdk": "workspace:*",
     "@uiw/react-codemirror": "^4.25.4",
     "framer-motion": "^12.34.2",
     "lucide-react": "^0.575.0",

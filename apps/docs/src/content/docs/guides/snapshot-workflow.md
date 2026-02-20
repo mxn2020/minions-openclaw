@@ -58,7 +58,7 @@ Output:
 ## TypeScript SDK — Full History Workflow
 
 ```typescript
-import { SnapshotManager, GatewayClient } from '@minions-openclaw/core';
+import { SnapshotManager, GatewayClient } from '@minions-openclaw/sdk';
 
 const client = new GatewayClient('ws://localhost:3001', 'token');
 await client.openConnection();
@@ -86,7 +86,7 @@ if (history.length >= 2) {
 To restore a previous config, use `compose()` on an older snapshot's instance and re-import:
 
 ```typescript
-import { ConfigDecomposer, SnapshotManager } from '@minions-openclaw/core';
+import { ConfigDecomposer, SnapshotManager } from '@minions-openclaw/sdk';
 
 const decomposer = new ConfigDecomposer();
 const snapshots = new SnapshotManager();

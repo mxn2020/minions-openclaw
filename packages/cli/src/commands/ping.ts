@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import { InstanceManager } from '@minions-openclaw/core';
+import { InstanceManager } from '@minions-openclaw/sdk';
 
 export const pingCommand = new Command('ping')
   .description('Ping an OpenClaw Gateway instance')

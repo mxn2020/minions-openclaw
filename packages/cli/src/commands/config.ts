@@ -1,8 +1,8 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import { ConfigDecomposer, SnapshotManager } from '@minions-openclaw/core';
-import type { Minion } from '@minions-openclaw/core';
+import { ConfigDecomposer, SnapshotManager } from '@minions-openclaw/sdk';
+import type { Minion } from '@minions-openclaw/sdk';
 import { promises as fsp } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';

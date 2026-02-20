@@ -1,5 +1,5 @@
 {
-  "name": "@minions-openclaw/core",
+  "name": "@minions-openclaw/sdk",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",

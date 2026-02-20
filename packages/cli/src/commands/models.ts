@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { InstanceManager, GatewayClient } from '@minions-openclaw/core';
+import { InstanceManager, GatewayClient } from '@minions-openclaw/sdk';
 
 export const modelsCommand = new Command('models')
   .description('List model providers on an OpenClaw Gateway instance')

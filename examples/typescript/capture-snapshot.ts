@@ -1,7 +1,7 @@
 /**
  * Example: Capture a snapshot from an OpenClaw Gateway instance
  */
-import { InstanceManager, SnapshotManager, GatewayClient } from '@minions-openclaw/core';
+import { InstanceManager, SnapshotManager, GatewayClient } from '@minions-openclaw/sdk';
 
 async function main() {
   const instanceManager = new InstanceManager();

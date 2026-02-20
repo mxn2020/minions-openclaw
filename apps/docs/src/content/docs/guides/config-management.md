@@ -64,7 +64,7 @@ Output:
 ## TypeScript SDK
 
 ```typescript
-import { ConfigDecomposer } from '@minions-openclaw/core';
+import { ConfigDecomposer } from '@minions-openclaw/sdk';
 
 const decomposer = new ConfigDecomposer();
 

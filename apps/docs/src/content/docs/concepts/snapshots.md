@@ -37,7 +37,7 @@ All three snapshots are also children of the instance via `parent_of` relations.
 ## Capturing a Snapshot
 
 ```typescript
-import { GatewayClient, SnapshotManager } from '@minions-openclaw/core';
+import { GatewayClient, SnapshotManager } from '@minions-openclaw/sdk';
 
 const client = new GatewayClient('ws://localhost:3001', 'token');
 await client.openConnection();

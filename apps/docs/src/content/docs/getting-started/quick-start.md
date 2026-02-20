@@ -50,7 +50,7 @@ openclaw-manager snapshot list abc-123
 ## 5. Using the TypeScript SDK
 
 ```typescript
-import { InstanceManager, SnapshotManager, GatewayClient } from '@minions-openclaw/core';
+import { InstanceManager, SnapshotManager, GatewayClient } from '@minions-openclaw/sdk';
 
 const instances = new InstanceManager();
 const instance = await instances.register('my-gateway', 'ws://localhost:3001', 'my-secret-token');

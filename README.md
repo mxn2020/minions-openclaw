@@ -1,7 +1,7 @@
 # minions-openclaw
 
 [![CI](https://github.com/minions-openclaw/minions-openclaw/actions/workflows/ci.yml/badge.svg)](https://github.com/minions-openclaw/minions-openclaw/actions/workflows/ci.yml)
-[![npm version](https://badge.fury.io/js/@minions-openclaw%2Fcore.svg)](https://www.npmjs.com/package/@minions-openclaw/core)
+[![npm version](https://badge.fury.io/js/@minions-openclaw%2Fcore.svg)](https://www.npmjs.com/package/@minions-openclaw/sdk)
 [![PyPI version](https://badge.fury.io/py/minions-openclaw.svg)](https://pypi.org/project/minions-openclaw/)
 [![License: MIT](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](LICENSE)
 
@@ -39,7 +39,7 @@ npm install -g @minions-openclaw/cli
 ### TypeScript SDK
 
 ```bash
-npm install @minions-openclaw/core
+npm install @minions-openclaw/sdk
 ```
 
 ### Python SDK
@@ -116,7 +116,7 @@ import {
   GatewayClient,
   SnapshotManager,
   ConfigDecomposer,
-} from '@minions-openclaw/core';
+} from '@minions-openclaw/sdk';
 
 // Register an instance
 const manager = new InstanceManager();
@@ -167,7 +167,7 @@ asyncio.run(capture())
 ```
 minions-openclaw/
 ├── packages/
-│   ├── core/          # TypeScript library (@minions-openclaw/core)
+│   ├── core/          # TypeScript library (@minions-openclaw/sdk)
 │   │   ├── src/
 │   │   │   ├── types.ts           # MinionType definitions for all OpenClaw entities
 │   │   │   ├── InstanceManager.ts # CRUD for gateway instances

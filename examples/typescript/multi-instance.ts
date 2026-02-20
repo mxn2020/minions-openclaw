@@ -1,7 +1,7 @@
 /**
  * Example: Managing multiple OpenClaw Gateway instances
  */
-import { InstanceManager } from '@minions-openclaw/core';
+import { InstanceManager } from '@minions-openclaw/sdk';
 
 async function main() {
   const manager = new InstanceManager();

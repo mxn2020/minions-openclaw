@@ -29,7 +29,7 @@ importers:
       '@codemirror/lang-json':
         specifier: ^6.0.2
         version: 6.0.2
-      '@minions-openclaw/core':
+      '@minions-openclaw/sdk':
         specifier: workspace:*
         version: link:../../packages/core
       '@uiw/react-codemirror':
@@ -81,7 +81,7 @@ importers:
 
   packages/cli:
     dependencies:
-      '@minions-openclaw/core':
+      '@minions-openclaw/sdk':
         specifier: workspace:*
         version: link:../core
       chalk:

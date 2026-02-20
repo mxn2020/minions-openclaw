@@ -1,12 +1,12 @@
 ---
 title: TypeScript API Reference
-description: Full API reference for @minions-openclaw/core — InstanceManager, GatewayClient, SnapshotManager, ConfigDecomposer.
+description: Full API reference for @minions-openclaw/sdk — InstanceManager, GatewayClient, SnapshotManager, ConfigDecomposer.
 ---
 
 # TypeScript API Reference
 
 ```bash
-pnpm add @minions-openclaw/core
+pnpm add @minions-openclaw/sdk
 ```
 
 ---
@@ -16,7 +16,7 @@ pnpm add @minions-openclaw/core
 Manages registered OpenClaw Gateway instances in local storage (`~/.openclaw-manager/data.json`).
 
 ```typescript
-import { InstanceManager } from '@minions-openclaw/core';
+import { InstanceManager } from '@minions-openclaw/sdk';
 const manager = new InstanceManager();
 ```
 
@@ -65,7 +65,7 @@ Soft-deletes the instance Minion.
 WebSocket client for live communication with an OpenClaw Gateway.
 
 ```typescript
-import { GatewayClient } from '@minions-openclaw/core';
+import { GatewayClient } from '@minions-openclaw/sdk';
 const client = new GatewayClient(url, token?, devicePrivateKey?);
 ```
 
@@ -114,7 +114,7 @@ The device token returned by the gateway after successful auth, if any.
 Captures and queries point-in-time snapshots of gateway state.
 
 ```typescript
-import { SnapshotManager } from '@minions-openclaw/core';
+import { SnapshotManager } from '@minions-openclaw/sdk';
 const snapshots = new SnapshotManager();
 ```
 
@@ -171,7 +171,7 @@ Synchronous field-level comparison.
 Maps between `OpenClawConfig` JSON and a typed Minion tree.
 
 ```typescript
-import { ConfigDecomposer } from '@minions-openclaw/core';
+import { ConfigDecomposer } from '@minions-openclaw/sdk';
 const decomposer = new ConfigDecomposer();
 ```
 

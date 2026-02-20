@@ -1,7 +1,7 @@
 /**
  * Example: Config management with ConfigDecomposer
  */
-import { ConfigDecomposer } from '@minions-openclaw/core';
+import { ConfigDecomposer } from '@minions-openclaw/sdk';
 
 async function main() {
   const decomposer = new ConfigDecomposer();

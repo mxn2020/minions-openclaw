@@ -31,7 +31,7 @@ openclaw-manager --version
 Install the TypeScript core package in your project:
 
 ```bash
-pnpm add @minions-openclaw/core
+pnpm add @minions-openclaw/sdk
 ```
 
 ## Python SDK

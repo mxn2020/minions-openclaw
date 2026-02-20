@@ -60,7 +60,7 @@ Soft-deletes the instance Minion (sets `deletedAt`). Snapshots are unaffected.
 ## TypeScript SDK
 
 ```typescript
-import { InstanceManager } from '@minions-openclaw/core';
+import { InstanceManager } from '@minions-openclaw/sdk';
 
 const manager = new InstanceManager();
 

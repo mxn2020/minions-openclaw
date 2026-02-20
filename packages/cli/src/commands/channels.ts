@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { InstanceManager, GatewayClient } from '@minions-openclaw/core';
+import { InstanceManager, GatewayClient } from '@minions-openclaw/sdk';
 
 export const channelsCommand = new Command('channels')
   .description('List channels on an OpenClaw Gateway instance')

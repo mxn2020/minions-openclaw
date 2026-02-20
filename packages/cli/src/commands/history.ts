@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { SnapshotManager } from '@minions-openclaw/core';
+import { SnapshotManager } from '@minions-openclaw/sdk';
 
 export const historyCommand = new Command('history')
   .description('Show snapshot history for an instance')

@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import { InstanceManager, SnapshotManager, GatewayClient } from '@minions-openclaw/core';
+import { InstanceManager, SnapshotManager, GatewayClient } from '@minions-openclaw/sdk';
 
 export const snapshotCommand = new Command('snapshot')
   .description('Capture a snapshot of an OpenClaw Gateway instance')
