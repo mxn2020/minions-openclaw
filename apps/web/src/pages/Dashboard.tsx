@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import Navbar from '../components/landing/Navbar';
-import Footer from '../components/landing/Footer';
+import { Link } from 'react-router-dom';
 import { InstanceList } from '../components/dashboard/InstanceList';
 import { SnapshotTimeline } from '../components/dashboard/SnapshotTimeline';
 import { AgentsList } from '../components/dashboard/AgentsList';
@@ -24,58 +23,65 @@ export default function Dashboard() {
     const [activeTab, setActiveTab] = useState<Tab>('Agents');
 
     return (
-        <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-1 p-6 max-w-7xl mx-auto w-full">
-                <div className="mb-6">
-                    <h1 className="text-2xl font-bold text-primary">Dashboard</h1>
-                    <p className="text-sm text-muted mt-1">Demo data — connect the CLI to load real instances</p>
+        <div className="flex flex-col h-screen bg-background text-primary overflow-hidden">
+            <header className="h-14 border-b border-border flex items-center justify-between px-4 bg-surface/50">
+                <div className="flex items-center space-x-4">
+                    <Link to="/" className="text-muted hover:text-primary transition-colors text-sm">
+                        ← Back
+                    </Link>
+                    <span className="font-mono font-bold">Dashboard</span>
                 </div>
+            </header>
 
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                    {/* Instances column */}
-                    <div className="lg:col-span-1">
-                        <h2 className="text-sm font-semibold text-muted uppercase tracking-wider mb-3">Instances</h2>
-                        <InstanceList
-                            instances={DEMO_INSTANCES}
-                            selectedId={selectedInstance}
-                            onSelect={setSelectedInstance}
-                        />
+            <div className="flex-1 overflow-y-auto p-6">
+                <div className="max-w-7xl mx-auto w-full">
+                    <div className="mb-6">
+                        <p className="text-sm text-muted">Demo data — connect the CLI to load real instances</p>
                     </div>
 
-                    {/* Snapshots column */}
-                    <div className="lg:col-span-1">
-                        <h2 className="text-sm font-semibold text-muted uppercase tracking-wider mb-3">Snapshots</h2>
-                        <SnapshotTimeline
-                            snapshots={DEMO_SNAPSHOTS}
-                            selectedId={selectedSnapshot}
-                            onSelect={setSelectedSnapshot}
-                        />
-                    </div>
-
-                    {/* Detail panel */}
-                    <div className="lg:col-span-2">
-                        <div className="flex gap-2 mb-4 border-b border-border pb-3">
-                            {TABS.map(tab => (
-                                <button
-                                    key={tab}
-                                    onClick={() => setActiveTab(tab)}
-                                    className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                                        activeTab === tab ? 'bg-accent/10 text-accent' : 'text-muted hover:text-primary hover:bg-white/5'
-                                    }`}
-                                >
-                                    {tab}
-                                </button>
-                            ))}
+                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                        {/* Instances column */}
+                        <div className="lg:col-span-1">
+                            <h2 className="text-sm font-semibold text-muted uppercase tracking-wider mb-3">Instances</h2>
+                            <InstanceList
+                                instances={DEMO_INSTANCES}
+                                selectedId={selectedInstance}
+                                onSelect={setSelectedInstance}
+                            />
                         </div>
-                        {activeTab === 'Agents' && <AgentsList agents={DEMO_AGENTS} />}
-                        {activeTab === 'Channels' && <ChannelsList channels={DEMO_CHANNELS} />}
-                        {activeTab === 'Models' && <ModelsList models={DEMO_MODELS} />}
-                        {activeTab === 'Config' && <ConfigViewer config={{ gatewayConfig: { host: '0.0.0.0', port: 3001 } }} />}
+
+                        {/* Snapshots column */}
+                        <div className="lg:col-span-1">
+                            <h2 className="text-sm font-semibold text-muted uppercase tracking-wider mb-3">Snapshots</h2>
+                            <SnapshotTimeline
+                                snapshots={DEMO_SNAPSHOTS}
+                                selectedId={selectedSnapshot}
+                                onSelect={setSelectedSnapshot}
+                            />
+                        </div>
+
+                        {/* Detail panel */}
+                        <div className="lg:col-span-2">
+                            <div className="flex gap-2 mb-4 border-b border-border pb-3">
+                                {TABS.map(tab => (
+                                    <button
+                                        key={tab}
+                                        onClick={() => setActiveTab(tab)}
+                                        className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === tab ? 'bg-accent/10 text-accent' : 'text-muted hover:text-primary hover:bg-white/5'
+                                            }`}
+                                    >
+                                        {tab}
+                                    </button>
+                                ))}
+                            </div>
+                            {activeTab === 'Agents' && <AgentsList agents={DEMO_AGENTS} />}
+                            {activeTab === 'Channels' && <ChannelsList channels={DEMO_CHANNELS} />}
+                            {activeTab === 'Models' && <ModelsList models={DEMO_MODELS} />}
+                            {activeTab === 'Config' && <ConfigViewer config={{ gatewayConfig: { host: '0.0.0.0', port: 3001 } }} />}
+                        </div>
                     </div>
                 </div>
-            </main>
-            <Footer />
+            </div>
         </div>
     );
 }
