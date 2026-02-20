@@ -90,6 +90,9 @@ importers:
       commander:
         specifier: ^14.0.3
         version: 14.0.3
+      minions-sdk:
+        specifier: 0.2.2
+        version: 0.2.2
       ora:
         specifier: ^9.3.0
         version: 9.3.0
@@ -110,8 +113,8 @@ importers:
   packages/core:
     dependencies:
       minions-sdk:
-        specifier: ^0.2.1
-        version: 0.2.1
+        specifier: ^0.2.2
+        version: 0.2.2
       ws:
         specifier: ^8.19.0
         version: 8.19.0
@@ -2109,8 +2112,8 @@ packages:
     resolution: {integrity: sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==}
     engines: {node: '>=16 || 14 >=14.17'}
 
-  minions-sdk@0.2.1:
-    resolution: {integrity: sha512-g0LoQBRz0QXsbVkfU8tlXSwsnRBtQxyQe7CrrWEpyQc7hw/r6Z4Oqv3ReJ14dC3/sCdNa4Pn7NiS0bYotC7W1g==}
+  minions-sdk@0.2.2:
+    resolution: {integrity: sha512-O/BPnCV1CW2rAhNHmgJWU+OpCqzWfWaPPCEXYRRWf0yo5puJVXNdqlz/HjEHmbIws1YY6CJJrqfcP03dfKD11A==}
 
   motion-dom@12.34.3:
     resolution: {integrity: sha512-sYgFe+pR9aIM7o4fhs2aXtOI+oqlUd33N9Yoxcgo1Fv7M20sRkHtCmzE/VRNIcq7uNJ+qio+Xubt1FXH3pQ+eQ==}
@@ -5282,7 +5285,7 @@ snapshots:
     dependencies:
       brace-expansion: 2.0.2
 
-  minions-sdk@0.2.1: {}
+  minions-sdk@0.2.2: {}
 
   motion-dom@12.34.3:
     dependencies:
