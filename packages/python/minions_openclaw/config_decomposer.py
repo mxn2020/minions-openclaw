@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from minions_sdk import Minion, Relation, create_minion, generate_id, now
+from minions import Minion, Relation, create_minion, generate_id, now
 from .types import (
     openclaw_agent_type,
     openclaw_channel_type,
@@ -68,7 +68,7 @@ class ConfigDecomposer:
             ))
 
         def make(type_, title: str, fields: Dict[str, Any]) -> Minion:
-            m, _ = create_minion(title, type_, fields)
+            m, _ = create_minion({"title": title, "fields": fields}, type_)
             return m
 
         for agent in config.get('agents', []):

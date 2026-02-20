@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import List, Optional, Dict, Any
 
-from minions_sdk import Minion, Relation, create_minion, soft_delete, generate_id, now
+from minions import Minion, Relation, create_minion, soft_delete, generate_id, now
 from .types import openclaw_instance_type
 
 DATA_DIR = Path.home() / '.openclaw-manager'
@@ -63,7 +63,7 @@ class InstanceManager:
         fields: Dict[str, Any] = {'url': url, 'status': 'registered'}
         if token:
             fields['token'] = token
-        minion, validation = create_minion(name, openclaw_instance_type, fields)
+        minion, validation = create_minion({"title": name, "fields": fields}, openclaw_instance_type)
         if not validation.valid:
             raise ValueError(f"Validation failed: {[e.message for e in validation.errors]}")
         storage = _read_storage()

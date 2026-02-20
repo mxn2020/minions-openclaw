@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from minions_openclaw.snapshot_manager import SnapshotManager
 from minions_openclaw.instance_manager import InstanceManager
-from minions_sdk import Minion
+from minions import Minion
 from datetime import datetime, timezone
 
 DATA_FILE = Path.home() / '.openclaw-manager' / 'data.json'

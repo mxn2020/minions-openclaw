@@ -1,5 +1,5 @@
 """OpenClaw-specific MinionType definitions."""
-from minions_sdk import (
+from minions import (
     MinionType, FieldDefinition, TypeRegistry, generate_id
 )
 

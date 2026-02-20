@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from minions_sdk import Minion, Relation, create_minion, generate_id, now
+from minions import Minion, Relation, create_minion, generate_id, now
 from .types import openclaw_snapshot_type
 
 DATA_DIR = Path.home() / '.openclaw-manager'
@@ -28,16 +28,18 @@ class SnapshotManager:
     def capture_snapshot(self, instance_id: str, gateway_data: Dict[str, Any]) -> Minion:
         storage = _read_storage()
         minion, _ = create_minion(
-            f"Snapshot {now()}",
-            openclaw_snapshot_type,
             {
-                'instanceId': instance_id,
-                'capturedAt': now(),
-                'config': json.dumps(gateway_data.get('config', {})),
-                'agentCount': len(gateway_data.get('agents', [])),
-                'channelCount': len(gateway_data.get('channels', [])),
-                'modelCount': len(gateway_data.get('models', [])),
-            }
+                "title": f"Snapshot {now()}",
+                "fields": {
+                    'instanceId': instance_id,
+                    'capturedAt': now(),
+                    'config': json.dumps(gateway_data.get('config', {})),
+                    'agentCount': len(gateway_data.get('agents', [])),
+                    'channelCount': len(gateway_data.get('channels', [])),
+                    'modelCount': len(gateway_data.get('models', [])),
+                }
+            },
+            openclaw_snapshot_type
         )
         minion_dict = {
             'id': minion.id,

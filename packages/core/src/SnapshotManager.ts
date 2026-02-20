@@ -40,7 +40,7 @@ export class SnapshotManager {
     const storage = await readStorage();
 
     const previousSnapshots = storage.minions
-      .filter(m => m.minionTypeId === openclawSnapshotType.id && !m.deletedAt)
+      .filter(m => m.minionTypeId === openclawSnapshotType.id && m.deletedAt == null)
       .filter(m => storage.relations.some(r => r.sourceId === instanceId && r.targetId === m.id))
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
@@ -92,7 +92,7 @@ export class SnapshotManager {
       .filter(r => r.sourceId === instanceId && r.type === 'parent_of')
       .map(r => r.targetId);
     return storage.minions
-      .filter(m => snapshotIds.includes(m.id) && m.minionTypeId === openclawSnapshotType.id && !m.deletedAt)
+      .filter(m => snapshotIds.includes(m.id) && m.minionTypeId === openclawSnapshotType.id && (m.deletedAt === undefined || m.deletedAt === null))
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 
@@ -107,7 +107,7 @@ export class SnapshotManager {
       .filter(r => r.sourceId === instanceId && r.type === 'parent_of')
       .map(r => r.targetId);
     const snapshots = storage.minions.filter(
-      m => snapshotIds.includes(m.id) && m.minionTypeId === openclawSnapshotType.id && !m.deletedAt
+      m => snapshotIds.includes(m.id) && m.minionTypeId === openclawSnapshotType.id && (m.deletedAt === undefined || m.deletedAt === null)
     );
 
     // Walk the follows chain to order newest → oldest

@@ -25,7 +25,7 @@ from .instance_manager import InstanceManager
 from .config_decomposer import ConfigDecomposer
 from .snapshot_manager import SnapshotManager
 from .gateway_client import GatewayClient
-from minions_sdk import (
+from minions import (
     Minion,
     MinionType,
     Relation,

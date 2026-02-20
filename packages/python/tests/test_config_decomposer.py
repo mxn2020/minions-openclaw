@@ -1,4 +1,4 @@
-from minions_sdk import generate_id
+from minions import generate_id
 from minions_openclaw.config_decomposer import ConfigDecomposer
 
 

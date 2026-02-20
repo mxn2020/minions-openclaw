@@ -104,13 +104,13 @@ export class InstanceManager {
   async list(): Promise<Minion[]> {
     const storage = await readStorage();
     return storage.minions.filter(
-      m => m.minionTypeId === openclawInstanceType.id && !m.deletedAt
+      m => m.minionTypeId === openclawInstanceType.id && (m.deletedAt === undefined || m.deletedAt === null)
     );
   }
 
   async getById(id: string): Promise<Minion | undefined> {
     const storage = await readStorage();
-    return storage.minions.find(m => m.id === id && !m.deletedAt);
+    return storage.minions.find(m => m.id === id && (m.deletedAt === undefined || m.deletedAt === null));
   }
 
   async remove(id: string): Promise<void> {
