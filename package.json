@@ -14,8 +14,5 @@
   "engines": {
     "node": ">=20"
   },
-  "license": "MIT",
-  "dependencies": {
-    "minions-sdk": "link:../minions/packages/core"
-  }
+  "license": "MIT"
 }

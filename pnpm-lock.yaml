@@ -9,11 +9,7 @@ overrides:
 
 importers:
 
-  .:
-    dependencies:
-      minions-sdk:
-        specifier: link:../minions/packages/core
-        version: link:../minions/packages/core
+  .: {}
 
   apps/docs:
     dependencies:
