@@ -169,104 +169,21 @@ declare module 'astro:content' {
 	>;
 
 	type ContentEntryMap = {
-		"docs": {
-"api/python.mdx": {
-	id: "api/python.mdx";
-  slug: "api/python";
-  body: string;
-  collection: "docs";
-  data: InferEntrySchema<"docs">
-} & { render(): Render[".mdx"] };
-"api/typescript.mdx": {
-	id: "api/typescript.mdx";
-  slug: "api/typescript";
-  body: string;
-  collection: "docs";
-  data: InferEntrySchema<"docs">
-} & { render(): Render[".mdx"] };
-"cli/reference.mdx": {
-	id: "cli/reference.mdx";
-  slug: "cli/reference";
-  body: string;
-  collection: "docs";
-  data: InferEntrySchema<"docs">
-} & { render(): Render[".mdx"] };
-"concepts/architecture.mdx": {
-	id: "concepts/architecture.mdx";
-  slug: "concepts/architecture";
-  body: string;
-  collection: "docs";
-  data: InferEntrySchema<"docs">
-} & { render(): Render[".mdx"] };
-"concepts/configuration-mapping.mdx": {
-	id: "concepts/configuration-mapping.mdx";
-  slug: "concepts/configuration-mapping";
-  body: string;
-  collection: "docs";
-  data: InferEntrySchema<"docs">
-} & { render(): Render[".mdx"] };
-"concepts/multi-instance.mdx": {
-	id: "concepts/multi-instance.mdx";
-  slug: "concepts/multi-instance";
-  body: string;
-  collection: "docs";
-  data: InferEntrySchema<"docs">
-} & { render(): Render[".mdx"] };
-"concepts/snapshots.mdx": {
-	id: "concepts/snapshots.mdx";
-  slug: "concepts/snapshots";
-  body: string;
-  collection: "docs";
-  data: InferEntrySchema<"docs">
-} & { render(): Render[".mdx"] };
-"getting-started.mdx": {
-	id: "getting-started.mdx";
-  slug: "getting-started";
-  body: string;
-  collection: "docs";
-  data: InferEntrySchema<"docs">
-} & { render(): Render[".mdx"] };
-"guides/configuration-management.mdx": {
-	id: "guides/configuration-management.mdx";
-  slug: "guides/configuration-management";
-  body: string;
-  collection: "docs";
-  data: InferEntrySchema<"docs">
-} & { render(): Render[".mdx"] };
-"guides/registering-instances.mdx": {
-	id: "guides/registering-instances.mdx";
-  slug: "guides/registering-instances";
-  body: string;
-  collection: "docs";
-  data: InferEntrySchema<"docs">
-} & { render(): Render[".mdx"] };
-"guides/security.mdx": {
-	id: "guides/security.mdx";
-  slug: "guides/security";
-  body: string;
-  collection: "docs";
-  data: InferEntrySchema<"docs">
-} & { render(): Render[".mdx"] };
-"guides/snapshot-monitoring.mdx": {
-	id: "guides/snapshot-monitoring.mdx";
-  slug: "guides/snapshot-monitoring";
-  body: string;
-  collection: "docs";
-  data: InferEntrySchema<"docs">
-} & { render(): Render[".mdx"] };
-"index.mdx": {
-	id: "index.mdx";
-  slug: "index";
-  body: string;
-  collection: "docs";
-  data: InferEntrySchema<"docs">
-} & { render(): Render[".mdx"] };
-};
-
+		
 	};
 
 	type DataEntryMap = {
-		
+		"docs": Record<string, {
+  id: string;
+  render(): Render[".md"];
+  slug: string;
+  body: string;
+  collection: "docs";
+  data: InferEntrySchema<"docs">;
+  rendered?: RenderedContent;
+  filePath?: string;
+}>;
+
 	};
 
 	type AnyEntryMap = ContentEntryMap & DataEntryMap;
@@ -298,6 +215,6 @@ declare module 'astro:content' {
 		LiveContentConfig['collections'][C]['loader']
 	>;
 
-	export type ContentConfig = typeof import("../src/content/config.js");
+	export type ContentConfig = typeof import("../src/content.config.js");
 	export type LiveContentConfig = never;
 }
