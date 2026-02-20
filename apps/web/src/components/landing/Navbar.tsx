@@ -9,12 +9,12 @@ export default function Navbar() {
 
     const getDocsUrl = () => {
         if (typeof window === 'undefined') return 'https://openclaw.minions.help';
-        return window.location.hostname.startsWith('dev--') ? 'https://dev--openclaw-docs.netlify.app' : 'https://openclaw.minions.help';
+        return window.location.hostname.startsWith('dev--') ? 'https://openclaw.minions.help' : 'https://openclaw.minions.help';
     };
 
     const getBlogUrl = () => {
         if (typeof window === 'undefined') return 'https://openclaw.minions.blog';
-        return window.location.hostname.startsWith('dev--') ? 'https://dev--openclaw-blog.netlify.app' : 'https://openclaw.minions.blog';
+        return window.location.hostname.startsWith('dev--') ? 'https://openclaw.minions.blog' : 'https://openclaw.minions.blog';
     };
 
     return (

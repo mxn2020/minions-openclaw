@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 export default function Footer() {
     const getDocsUrl = () => {
         if (typeof window === 'undefined') return 'https://openclaw.minions.help';
-        return window.location.hostname.startsWith('dev--') ? 'https://dev--openclaw-docs.netlify.app' : 'https://openclaw.minions.help';
+        return window.location.hostname.startsWith('dev--') ? 'https://openclaw.minions.help' : 'https://openclaw.minions.help';
     };
 
     const getBlogUrl = () => {
         if (typeof window === 'undefined') return 'https://openclaw.minions.blog';
-        return window.location.hostname.startsWith('dev--') ? 'https://dev--openclaw-blog.netlify.app' : 'https://openclaw.minions.blog';
+        return window.location.hostname.startsWith('dev--') ? 'https://openclaw.minions.blog' : 'https://openclaw.minions.blog';
     };
     return (
         <footer className="border-t border-border bg-background py-12">
