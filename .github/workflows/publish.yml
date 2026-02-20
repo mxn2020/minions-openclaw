@@ -40,8 +40,8 @@ jobs:
       - name: Test
         run: pnpm run test
 
-      - name: Publish @minions-openclaw/core
-        run: pnpm --filter @minions-openclaw/core publish --no-git-checks --access public
+      - name: Publish @minions-openclaw/sdk
+        run: pnpm --filter @minions-openclaw/sdk publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
