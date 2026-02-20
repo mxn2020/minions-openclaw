@@ -5,6 +5,9 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Minions OpenClaw',
+      components: {
+        Head: './src/components/CopyMarkdownButton.astro',
+      },
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/mxn2020/minions-openclaw' }],
       sidebar: [
         {

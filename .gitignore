@@ -14,3 +14,6 @@ coverage/
 venv/
 PROMPT.md
 PROMPTS.md
+
+# Local Netlify folder
+.netlify
