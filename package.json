@@ -9,10 +9,7 @@
   "scripts": {
     "build": "pnpm --filter @minions-openclaw/sdk run build && pnpm --filter @minions-openclaw/cli run build && pnpm --filter @minions-openclaw/docs run build && pnpm --filter @minions-openclaw/web run build",
     "test": "pnpm --filter @minions-openclaw/sdk run test",
-    "lint": "pnpm --filter @minions-openclaw/sdk run build && pnpm --filter @minions-openclaw/sdk run lint && pnpm --filter @minions-openclaw/cli run lint",
-    "deploy:docs": "pnpm --filter @minions-openclaw/docs run build && netlify deploy --dir apps/docs/dist --prod",
-    "deploy:web": "pnpm --filter @minions-openclaw/web run build && netlify deploy --dir apps/web/dist --prod",
-    "deploy": "pnpm run deploy:docs && pnpm run deploy:web"
+    "lint": "pnpm --filter @minions-openclaw/sdk run build && pnpm --filter @minions-openclaw/sdk run lint && pnpm --filter @minions-openclaw/cli run lint"
   },
   "engines": {
     "node": ">=20"
