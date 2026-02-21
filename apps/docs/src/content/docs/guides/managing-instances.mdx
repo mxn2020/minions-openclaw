@@ -3,6 +3,8 @@ title: Managing Instances
 description: Full CLI and SDK workflow for registering, pinging, listing, and removing OpenClaw instances.
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 # Managing Instances
 
 ## CLI Workflow
@@ -57,7 +59,10 @@ openclaw-manager instance remove <id>
 
 Soft-deletes the instance Minion (sets `deletedAt`). Snapshots are unaffected.
 
-## TypeScript SDK
+## SDK Usage
+
+<Tabs>
+<TabItem label="TypeScript">
 
 ```typescript
 import { InstanceManager } from '@minions-openclaw/sdk';
@@ -80,7 +85,8 @@ console.log('Latency:', result.latencyMs, 'ms');
 await manager.remove(instance.id);
 ```
 
-## Python SDK
+</TabItem>
+<TabItem label="Python">
 
 ```python
 from minions_openclaw import InstanceManager
@@ -96,6 +102,9 @@ for inst in instances:
 
 manager.remove(instance.id)
 ```
+
+</TabItem>
+</Tabs>
 
 ## Multi-Instance Tips
 

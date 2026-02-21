@@ -3,6 +3,8 @@ title: Gateway Setup Tutorial
 description: End-to-end tutorial for registering a gateway instance, capturing a snapshot, and diffing two snapshots.
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 ## Prerequisites
 
 - Node.js 18+ or Python 3.10+
@@ -22,6 +24,9 @@ pip install minions-openclaw
 An `openclaw-instance` minion stores the connection details for a single gateway. Registration involves providing the WebSocket URL and, after the first connection, persisting the device credentials returned by the handshake.
 
 ### TypeScript
+
+<Tabs>
+<TabItem label="TypeScript">
 
 ```typescript
 import { InstanceManager } from '@minions-openclaw/core';
@@ -73,6 +78,9 @@ console.log(`Gateway responded in ${ping.latencyMs}ms`);
 await client.disconnect();
 ```
 
+</TabItem>
+<TabItem label="Python">
+
 ```python
 from minions_openclaw import GatewayClient
 
@@ -84,6 +92,9 @@ print(f"Gateway responded in {ping.latency_ms}ms")
 
 await client.disconnect()
 ```
+
+</TabItem>
+</Tabs>
 
 ---
 

@@ -3,6 +3,8 @@ title: Quick Start
 description: Register an OpenClaw instance, ping it, take a snapshot, and view its agents in under 5 minutes.
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 # Quick Start
 
 ## 1. Register an Instance
@@ -47,7 +49,10 @@ Snapshot captured: snap-456 (3 agents, 2 channels, 1 model provider)
 openclaw-manager snapshot list abc-123
 ```
 
-## 5. Using the TypeScript SDK
+## 5. Using the SDK
+
+<Tabs>
+<TabItem label="TypeScript">
 
 ```typescript
 import { InstanceManager, SnapshotManager, GatewayClient } from '@minions-openclaw/sdk';
@@ -66,7 +71,8 @@ const snapshot = await snapshots.captureSnapshot(instance.id, presence);
 console.log('Snapshot ID:', snapshot.id);
 ```
 
-## 6. Using the Python SDK
+</TabItem>
+<TabItem label="Python">
 
 ```python
 import asyncio
@@ -87,3 +93,6 @@ async def main():
 
 asyncio.run(main())
 ```
+
+</TabItem>
+</Tabs>

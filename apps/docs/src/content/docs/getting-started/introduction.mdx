@@ -1,0 +1,50 @@
+---
+title: Introduction
+description: What is Minions OpenClaw? Manage, monitor, and version-control OpenClaw Gateway instances.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## What is Minions OpenClaw?
+
+**Minions OpenClaw** (or OpenClaw Manager) is a management layer for [OpenClaw Gateway](https://github.com/mxn2020/openclaw) instances. It lets you register, monitor, snapshot, and configure gateways from a unified CLI, TypeScript SDK, or Python SDK.
+
+Every piece of state — registered instances, configuration snapshots, agent definitions, channel settings — is stored as a **Minion** (a typed, versioned structured object), giving you full audit history and diff capabilities out of the box.
+
+## Who is it for?
+
+- **DevOps engineers** managing multiple OpenClaw Gateway deployments
+- **Platform teams** that need version-controlled gateway configurations
+- **AI teams** wanting snapshot-based rollback and config diffing
+
+## Key Features
+
+<CardGrid>
+  <Card title="Instance Registry" icon="pencil">
+    Register any OpenClaw Gateway with a URL, auth token, and optional RSA device key.
+  </Card>
+  <Card title="Snapshot System" icon="add-document">
+    Capture point-in-time state (agents, channels, models, config) and traverse the version chain.
+  </Card>
+  <Card title="Config Decomposition" icon="approve-check">
+    Decompose a gateway config JSON into a typed minion tree and recompose it back.
+  </Card>
+  <Card title="Config Diff" icon="setting">
+    Compare any two configs or snapshots at the field level — instantly see what changed.
+  </Card>
+</CardGrid>
+
+## How It Works
+
+1. **Register** a gateway instance with connection details
+2. **Snapshot** the current state to create a versioned record
+3. **Compare** snapshots to see exactly what changed between versions
+4. **Decompose** configs into typed minions for fine-grained management
+5. **Restore** a previous configuration if something goes wrong
+
+## Next Steps
+
+- **[Installation](/getting-started/installation/)** — Set up in under 5 minutes
+- **[Quick Start](/getting-started/quick-start/)** — Register your first instance and take a snapshot
+- **[Gateway Setup Tutorial](/tutorial/gateway-setup/)** — Full walkthrough
+- **[Managing Instances](/guides/managing-instances/)** — Day-to-day operations guide

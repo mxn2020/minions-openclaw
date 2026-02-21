@@ -3,22 +3,30 @@ import starlight from '@astrojs/starlight';
 
 const isProd = process.env.BRANCH === 'main';
 const isDev = process.env.BRANCH === 'dev';
-const siteUrl = isProd ? 'https://openclaw.minions.help' : (isDev ? 'https://dev--openclaw-docs.netlify.app' : 'http://localhost:4321');
+const siteUrl = isProd ? 'https://openclaw.minions.help' : (isDev ? 'https://openclaw.minions.help' : 'http://localhost:4321');
 
 export default defineConfig({
   site: siteUrl,
   integrations: [
     starlight({
       title: 'Minions OpenClaw',
+      description: 'Manage, monitor, and version-control your OpenClaw Gateway instances.',
+      head: [
+        { tag: 'meta', attrs: { property: 'og:image', content: '/og-image.png' } },
+      ],
       components: {
         Head: './src/components/CopyMarkdownButton.astro',
       },
-      social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/mxn2020/minions-openclaw' }],
+      social: [
+        { icon: 'github', label: 'GitHub', href: 'https://github.com/mxn2020/minions-openclaw' },
+        { icon: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/mnx/' },
+        { icon: 'external', label: 'App', href: 'https://www.minions.wtf' },
+      ],
       sidebar: [
         {
           label: 'Getting Started',
           items: [
-            { label: 'Introduction', link: '/' },
+            { label: 'Introduction', link: '/getting-started/introduction/' },
             { label: 'Installation', link: '/getting-started/installation/' },
             { label: 'Quick Start', link: '/getting-started/quick-start/' },
           ],
@@ -66,10 +74,6 @@ export default defineConfig({
             { label: 'TypeScript', link: '/api/typescript/' },
             { label: 'Python', link: '/api/python/' },
           ],
-        },
-        {
-          label: 'CLI Reference',
-          link: '/cli/',
         },
       ],
     }),

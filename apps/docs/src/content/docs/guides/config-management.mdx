@@ -3,6 +3,8 @@ title: Config Management
 description: Export, import, and diff OpenClaw Gateway configurations using the CLI and SDK.
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 # Config Management
 
 ## Export
@@ -61,7 +63,10 @@ Output:
     + 5
 ```
 
-## TypeScript SDK
+## SDK Usage
+
+<Tabs>
+<TabItem label="TypeScript">
 
 ```typescript
 import { ConfigDecomposer } from '@minions-openclaw/sdk';
@@ -86,7 +91,8 @@ console.log('Added agents:', delta.added.agents ?? []);
 console.log('Changed gateway port:', delta.changed.gatewayConfig);
 ```
 
-## Python SDK
+</TabItem>
+<TabItem label="Python">
 
 ```python
 from minions_openclaw import ConfigDecomposer
@@ -110,6 +116,9 @@ delta = decomposer.diff(config_a, config_b)
 print('Added agents:', delta['added'].get('agents', []))
 print('Changed gateway config:', delta['changed'].get('gatewayConfig', {}))
 ```
+
+</TabItem>
+</Tabs>
 
 ## Full Workflow Example
 

@@ -3,6 +3,8 @@ title: Connection Protocol
 description: The 7-step WebSocket handshake used by minions-openclaw to authenticate with an OpenClaw gateway.
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 ## Overview
 
 Every connection from `GatewayClient` to an OpenClaw gateway goes through a challenge-response authentication handshake before any RPC calls are permitted. The protocol uses RSA asymmetric cryptography: the gateway issues a random challenge, the client signs it with its private key, and the gateway verifies the signature against the registered public key.
@@ -67,6 +69,9 @@ The client signs the raw nonce string using:
 - Input: UTF-8 encoded nonce string
 - Output: base64-encoded signature
 
+<Tabs>
+<TabItem label="TypeScript">
+
 ```typescript
 import { createSign } from 'node:crypto';
 
@@ -77,6 +82,9 @@ function signChallenge(nonce: string, privateKeyPem: string): string {
   return sign.sign(privateKeyPem, 'base64');
 }
 ```
+
+</TabItem>
+<TabItem label="Python">
 
 ```python
 from cryptography.hazmat.primitives import hashes, serialization
@@ -94,6 +102,9 @@ def sign_challenge(nonce: str, private_key_pem: str) -> str:
     )
     return base64.b64encode(signature).decode("ascii")
 ```
+
+</TabItem>
+</Tabs>
 
 ### Step 4: Send auth message
 

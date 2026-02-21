@@ -3,6 +3,8 @@ title: Authentication
 description: RSA key generation, token storage, and device registration flow for minions-openclaw.
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 ## Overview
 
 `minions-openclaw` uses asymmetric RSA cryptography to authenticate clients against an OpenClaw gateway. Instead of a shared password, each client device generates a key pair. The public key is registered on the gateway; the private key never leaves the client machine. Authentication happens via a signed challenge — the gateway issues a random nonce, the client signs it with its private key, and the gateway verifies the signature.
@@ -13,7 +15,8 @@ description: RSA key generation, token storage, and device registration flow for
 
 Keys are generated automatically by `InstanceManager.register()`. If you need to generate them manually (e.g., for pre-provisioning or scripting), use the `generateKeyPair` utility:
 
-### TypeScript
+<Tabs>
+<TabItem label="TypeScript">
 
 ```typescript
 import { generateKeyPair } from '@minions-openclaw/core';
@@ -23,13 +26,17 @@ const { publicKey, privateKey } = await generateKeyPair();
 // privateKey — PEM-encoded RSA private key (2048-bit)
 ```
 
-### Python
+</TabItem>
+<TabItem label="Python">
 
 ```python
 from minions_openclaw import generate_key_pair
 
 public_key, private_key = generate_key_pair()
 ```
+
+</TabItem>
+</Tabs>
 
 ### Using Node.js crypto directly
 

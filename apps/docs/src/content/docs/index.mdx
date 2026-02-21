@@ -1,134 +1,43 @@
 ---
-title: Minions OpenClaw Manager
-description: Manage, monitor, and version-control your OpenClaw Gateway instances using the minions structured object system.
+title: Minions OpenClaw
+description: Manage, monitor, and version-control your OpenClaw Gateway instances.
+template: splash
+hero:
+  tagline: Manage, snapshot, and diff your OpenClaw Gateway instances — with full version history and config decomposition.
+  actions:
+    - text: Get Started
+      link: /getting-started/introduction/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/mxn2020/minions-openclaw
+      icon: external
 ---
 
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+## Start Here
 
-**OpenClaw Manager** lets you register, monitor, snapshot, and configure [OpenClaw Gateway](https://github.com/mxn2020/openclaw) instances from a unified CLI, TypeScript SDK, or Python SDK.
-
-Every piece of state — registered instances, configuration snapshots, agent definitions, channel settings — is stored as a **Minion** (a typed, versioned structured object), giving you full audit history and diff capabilities out of the box.
+<CardGrid>
+  <LinkCard title="Introduction" description="What is OpenClaw Manager and who is it for?" href="/getting-started/introduction/" />
+  <LinkCard title="Quick Start" description="Register your first instance and take a snapshot." href="/getting-started/quick-start/" />
+  <LinkCard title="API Reference" description="Full TypeScript and Python SDK reference." href="/reference/api-reference/" />
+  <LinkCard title="Gateway Setup" description="Step-by-step tutorial to get up and running." href="/tutorial/gateway-setup/" />
+</CardGrid>
 
 ## Why OpenClaw Manager?
 
-| Problem | Solution |
-|---------|---------|
-| No record of which config version is running | Snapshot capture stores the full gateway state as a linked version chain |
-| Can't compare configs across time | `config diff` and `compare()` give field-level diffs instantly |
-| Manual JSON wrangling to track agents/channels | Config decomposition maps every section into a typed Minion |
-| Scattered CLI scripts for multi-instance ops | Unified `openclaw-manager` CLI manages all instances from one place |
-
-## Key Features
-
-- **Instance Registry** — register any OpenClaw Gateway with a URL, auth token, and optional RSA device key
-- **Snapshot System** — capture point-in-time state (agents, channels, models, config) and traverse the version chain
-- **Config Decomposition** — decompose a gateway config JSON into a typed minion tree and recompose it back
-- **Config Diff** — compare any two configs or snapshots at the field level
-- **TypeScript & Python SDKs** — full feature parity across both languages
-- **WebSocket Protocol** — live connection to running gateways via the `GatewayClient`
-
-## Quick Example
-
-Choose between the unified `MinionsOpenClaw` client for seamless access or the modular functions for absolute control.
-
-<Tabs>
-<TabItem label="TypeScript">
-
-### Unified Client
-```typescript
-import { MinionsOpenClaw, InMemoryStorage } from '@minions-openclaw/sdk';
-
-const minions = new MinionsOpenClaw({ storage: new InMemoryStorage() });
-
-// Register and manage an OpenClaw instance
-const instance = await minions.create(
-  {
-    title: 'Production Gateway',
-    fields: {
-      url: 'wss://openclaw.internal.example.com',
-      authToken: process.env.OPENCLAW_TOKEN,
-    }
-  },
-  'openclawInstance'
-);
-
-console.log(`Registered Gateway: ${instance.id}`);
-```
-
-**OR Modular Imports**
-```typescript
-import { createMinion } from 'minions-sdk';
-import { openclawInstanceType, InMemoryStorage } from '@minions-openclaw/sdk';
-
-const storage = new InMemoryStorage();
-
-const { minion: instance } = createMinion(
-  {
-    title: 'Production Gateway',
-    fields: {
-      url: 'wss://openclaw.internal.example.com',
-      authToken: process.env.OPENCLAW_TOKEN,
-    }
-  },
-  openclawInstanceType
-);
-
-await storage.saveMinion(instance);
-```
-</TabItem>
-<TabItem label="Python">
-
-### Unified Client
-```python
-from minions_openclaw import MinionsOpenClaw, InMemoryStorage
-import os
-
-minions = MinionsOpenClaw(storage=InMemoryStorage())
-
-# Register and manage an OpenClaw instance
-instance = minions.create(
-    {
-        "title": "Production Gateway",
-        "fields": {
-            "url": "wss://openclaw.internal.example.com",
-            "authToken": os.getenv("OPENCLAW_TOKEN"),
-        }
-    },
-    "openclawInstance"
-)
-
-print(f"Registered Gateway: {instance.id}")
-```
-
-**OR Modular Imports**
-```python
-import os
-from minions import create_minion
-from minions_openclaw import openclaw_instance_type, InMemoryStorage
-
-storage = InMemoryStorage()
-
-instance, _ = create_minion(
-    {
-        "title": "Production Gateway",
-        "fields": {
-            "url": "wss://openclaw.internal.example.com",
-            "authToken": os.getenv("OPENCLAW_TOKEN"),
-        }
-    },
-    openclaw_instance_type
-)
-
-storage.save_minion(instance)
-```
-</TabItem>
-</Tabs>
-
-## Quick Links
-
-- [Installation](/getting-started/installation/) — set up in under 5 minutes
-- [Quick Start](/getting-started/quick-start/) — register an instance and take your first snapshot
-- [CLI Reference](/cli/) — every command with flags and examples
-- [API Reference — TypeScript](/api/typescript/)
-- [API Reference — Python](/api/python/)
+<CardGrid stagger>
+  <Card title="Instance Registry" icon="pencil">
+    Register any OpenClaw Gateway with a URL, auth token, and optional RSA device key.
+  </Card>
+  <Card title="Snapshot System" icon="add-document">
+    Capture point-in-time state and traverse the version chain — never lose a config again.
+  </Card>
+  <Card title="Config Decomposition" icon="approve-check">
+    Decompose gateway JSON into typed Minions and recompose it back — no manual wrangling.
+  </Card>
+  <Card title="Config Diff" icon="setting">
+    Compare any two configs or snapshots at the field level — instantly see what changed.
+  </Card>
+</CardGrid>
