@@ -15,7 +15,7 @@ export default defineConfig({
     },
     build: {
         commonjsOptions: {
-            include: [/@minions-openclaw\/core/, /node_modules/],
+            include: [/@minions-openclaw\/sdk/, /node_modules/],
         },
     },
 });

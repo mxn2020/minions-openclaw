@@ -2,6 +2,9 @@
   "name": "minions-openclaw",
   "version": "0.1.0",
   "private": true,
+  "description": "Manage, monitor, and version-control your OpenClaw Gateway instances",
+  "license": "MIT",
+  "author": "Mehdi Nabhani <mehdi@the-mehdi.com> (https://the-mehdi.com)",
   "workspaces": [
     "packages/*",
     "apps/*"
@@ -9,11 +12,12 @@
   "scripts": {
     "build": "pnpm --filter @minions-openclaw/sdk run build && pnpm --filter @minions-openclaw/cli run build && pnpm --filter @minions-openclaw/docs run build && pnpm --filter minions-openclaw-blog run build && pnpm --filter @minions-openclaw/web run build",
     "deploy:blog": "pnpm --filter minions-openclaw-blog run build && netlify deploy --dir apps/blog/dist --prod",
+    "deploy:docs": "pnpm --filter @minions-openclaw/docs run build && netlify deploy --dir apps/docs/dist --prod",
+    "deploy:web": "pnpm --filter @minions-openclaw/web run build && netlify deploy --dir apps/web/dist --prod",
     "test": "pnpm --filter @minions-openclaw/sdk run test",
     "lint": "pnpm --filter @minions-openclaw/sdk run build && pnpm --filter @minions-openclaw/sdk run lint && pnpm --filter @minions-openclaw/cli run lint"
   },
   "engines": {
     "node": ">=20"
-  },
-  "license": "MIT"
+  }
 }
