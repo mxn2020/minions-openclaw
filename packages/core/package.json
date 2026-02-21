@@ -37,14 +37,14 @@
     "docs": "typedoc"
   },
   "dependencies": {
-    "minions-sdk": "^0.2.2",
+    "minions-sdk": "^0.2.3",
     "ws": "^8.19.0"
   },
   "devDependencies": {
     "@types/node": "^25.3.0",
     "@types/ws": "^8.18.1",
-    "typedoc": "^0.26.0",
-    "typedoc-plugin-markdown": "^4.0.0",
+    "typedoc": "^0.28.17",
+    "typedoc-plugin-markdown": "^4.10.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   }

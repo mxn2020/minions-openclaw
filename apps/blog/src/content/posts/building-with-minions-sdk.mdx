@@ -1,87 +1,115 @@
 ---
-title: "Building a Gateway Dashboard with the OpenClaw SDK"
-description: "A hands-on tutorial showing how to build a real-time gateway monitoring dashboard using the @minions-openclaw/sdk."
-date: 2026-02-20
+title: "Building with the OpenClaw SDK: A Technical Tutorial"
+description: "Learn how to register gateway instances, capture snapshots, and manage configurations using the @minions-openclaw/sdk."
+date: 2026-02-21
 author: "Mehdi Nabhani"
-tags: ["tutorial", "sdk", "dashboard"]
+tags: ["tutorial", "typescript", "sdk"]
 draft: false
 ---
 
-# Building a Gateway Dashboard
+# Getting Started with the OpenClaw SDK
 
-One of the most common requests from OpenClaw users is a visual overview of their gateway instances. In this tutorial, we will build a simple dashboard that connects to your gateway, lists instances, and displays live configuration data.
+In our previous post, we introduced why managing AI gateways needs better tooling. Today, we're diving into the code. The `@minions-openclaw/sdk` is a type-safe library that brings structured gateway management to your TypeScript projects.
 
-## Prerequisites
-
-- Node.js 20+
-- An OpenClaw Gateway instance running locally or remotely
-- The `@minions-openclaw/sdk` package
+## Installation
 
 ```bash
-npm install @minions-openclaw/sdk
+pnpm add @minions-openclaw/sdk
 ```
 
-## Connecting to Your Gateway
-
-The SDK provides a straightforward client that handles authentication and connection management:
-
-```typescript
-import { OpenClawClient } from '@minions-openclaw/sdk';
-
-const client = new OpenClawClient({
-  url: process.env.GATEWAY_URL || 'http://localhost:8080',
-  apiKey: process.env.GATEWAY_API_KEY,
-});
-
-// Verify the connection
-const status = await client.healthCheck();
-console.log(`Gateway status: ${status.healthy ? 'OK' : 'UNREACHABLE'}`);
-```
-
-<Callout type="info">
-The SDK automatically retries failed connections and provides detailed error messages when a gateway is unreachable.
+<Callout type="warning">
+The SDK requires `minions-sdk` as a peer dependency. Make sure it's installed in your project.
 </Callout>
 
-## Listing Instances
+## Registering Gateway Instances
 
-If you manage multiple gateway instances, you can list and filter them:
+The first step is to register your OpenClaw Gateway instances so they can be tracked and managed.
 
 ```typescript
-const instances = await client.listInstances();
+import { createMinionsOpenClaw } from '@minions-openclaw/sdk';
 
-for (const instance of instances) {
-  console.log(`${instance.name} — ${instance.region} — ${instance.status}`);
+const client = createMinionsOpenClaw();
+
+// Register multiple instances
+const prodGateway = await client.instances.register({
+  name: 'prod-gateway',
+  url: 'wss://gateway.prod.example.com',
+  environment: 'production'
+});
+
+const stagingGateway = await client.instances.register({
+  name: 'staging-gateway',
+  url: 'wss://gateway.staging.example.com',
+  environment: 'staging'
+});
+
+// List all registered instances
+const instances = await client.instances.list();
+console.log(`Managing ${instances.length} gateway instances`);
+```
+
+## Working with Snapshots
+
+Snapshots are the heart of the version control system. They capture the complete configuration state of a gateway at a point in time.
+
+```typescript
+// Capture a snapshot before making changes
+const beforeSnapshot = await client.snapshots.capture(prodGateway.id);
+console.log(`Snapshot ${beforeSnapshot.id} captured at ${beforeSnapshot.timestamp}`);
+
+// After changes are made, capture another snapshot
+const afterSnapshot = await client.snapshots.capture(prodGateway.id);
+
+// Diff the two snapshots
+const changes = await client.snapshots.diff(beforeSnapshot.id, afterSnapshot.id);
+for (const change of changes) {
+  console.log(`${change.type}: ${change.path} — ${change.oldValue} → ${change.newValue}`);
 }
 ```
 
-## Taking and Comparing Snapshots
-
-The real power of the SDK is its snapshot system. Take snapshots before and after configuration changes to see exactly what was modified:
-
-```typescript
-// Before a config change
-const before = await client.createSnapshot({ label: 'before-update' });
-
-// ... make your config changes ...
-
-// After the change
-const after = await client.createSnapshot({ label: 'after-update' });
-
-// Diff the two snapshots
-const diff = await client.diffSnapshots(before.id, after.id);
-console.log(`${diff.additions} additions, ${diff.deletions} deletions`);
-```
-
 <Callout type="tip">
-Combine snapshot diffs with your CI/CD pipeline to automatically flag unexpected configuration changes before they reach production.
+Always capture a snapshot before and after configuration changes. This creates an audit trail that makes rollbacks trivial.
 </Callout>
 
-## What You Can Build From Here
+## Config Decomposition
 
-This basic dashboard can be extended with:
+Large gateway configs can be broken down into logical sections for easier management.
 
-- **Real-time model usage** — Track which LLM models are being called and their latency
-- **Config history timeline** — Visual timeline of all snapshots with diff views
-- **Alert rules** — Get notified when configuration drift is detected between instances
+```typescript
+const config = await client.config.decompose(prodGateway.id);
 
-Check out the full dashboard implementation in the [web app source code](https://github.com/mxn2020/minions-openclaw) and the [SDK documentation](https://openclaw.minions.help).
+// Access individual config sections
+console.log('Routing rules:', config.routing);
+console.log('Rate limits:', config.rateLimiting);
+console.log('Auth config:', config.auth);
+
+// Update a specific section without touching others
+await client.config.updateSection(prodGateway.id, 'rateLimiting', {
+  globalRpm: 1000,
+  perUserRpm: 60
+});
+```
+
+## Using the CLI
+
+For quick operations, the CLI is your best friend.
+
+```bash
+# Register a new instance
+openclaw-manager register --name prod --url wss://gateway.example.com
+
+# Capture a snapshot
+openclaw-manager snapshot capture --instance prod
+
+# List all snapshots
+openclaw-manager snapshot list --instance prod
+
+# Diff two snapshots
+openclaw-manager snapshot diff --from snap_001 --to snap_002
+```
+
+## Conclusion
+
+The OpenClaw SDK gives you structured, type-safe control over your AI gateway infrastructure. Combined with snapshots and config decomposition, you'll never lose track of what changed, when, or why.
+
+Check out the [full documentation](https://openclaw.minions.help) for more advanced features!

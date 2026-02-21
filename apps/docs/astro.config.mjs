@@ -37,6 +37,7 @@ export default defineConfig({
             { label: 'Introduction', link: '/getting-started/introduction/' },
             { label: 'Installation', link: '/getting-started/installation/' },
             { label: 'Quick Start', link: '/getting-started/quick-start/' },
+            { label: 'Contributing', link: '/guides/contributing/' },
           ],
         },
         {

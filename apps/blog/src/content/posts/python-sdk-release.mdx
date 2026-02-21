@@ -1,18 +1,18 @@
 ---
-title: "OpenClaw Python SDK: Manage Gateways from Python"
-description: "Announcing the Python SDK for Minions OpenClaw — manage gateway instances, take snapshots, and diff configurations from your Python scripts."
-date: 2026-02-20
+title: "Python SDK Release: Gateway Management Meets Python"
+description: "The Minions OpenClaw Python SDK is here — manage your AI gateways from Python with the same power as TypeScript."
+date: 2026-02-22
 author: "Mehdi Nabhani"
-tags: ["python", "release", "sdk"]
+tags: ["release", "python", "gateway"]
 draft: false
 ---
 
-# Python SDK for Minions OpenClaw
+# Bringing OpenClaw to Python
 
-We are excited to announce the release of the **Minions OpenClaw Python SDK** — bringing the same powerful gateway management capabilities to the Python ecosystem.
+While our TypeScript SDK has been the primary interface for Minions OpenClaw, the reality is that many infrastructure and DevOps teams prefer Python for their automation workflows. Today, we're releasing the **Minions OpenClaw Python SDK**.
 
 <Callout type="info">
-Many infrastructure and DevOps teams prefer Python for their automation scripts. The Python SDK provides full feature parity with the TypeScript SDK.
+The Python SDK mirrors the TypeScript SDK's API design while remaining idiomatic to Python developers, using async/await and Pydantic for type safety.
 </Callout>
 
 ## Installation
@@ -21,61 +21,69 @@ Many infrastructure and DevOps teams prefer Python for their automation scripts.
 pip install minions-openclaw
 ```
 
-## Quick Start
+## Managing Instances from Python
 
 ```python
-from minions_openclaw import OpenClawClient
+from minions_openclaw import InstanceManager
 
-client = OpenClawClient(
-    url="https://gateway.example.com",
-    api_key="your-api-key"
+manager = InstanceManager()
+
+# Register a gateway instance
+instance = manager.register(
+    name="prod-gateway",
+    url="wss://gateway.prod.example.com"
 )
 
-# List all gateway instances
-instances = client.list_instances()
-for instance in instances:
-    print(f"{instance.name} — {instance.status}")
+# List all instances
+for inst in manager.list():
+    print(f"{inst.name}: {inst.url} ({inst.status})")
 ```
 
-## Snapshot Management
+## Snapshot Workflows
 
-The Python SDK makes it easy to integrate snapshot management into your existing DevOps workflows:
+The snapshot system works identically to the TypeScript version, making it easy for mixed-language teams.
 
 ```python
-# Take a pre-deployment snapshot
-snapshot = client.create_snapshot(label="pre-deploy-v2.3")
+from minions_openclaw import SnapshotManager
 
-# After deploying, diff against the snapshot
-diff = client.diff_snapshots(snapshot.id, "current")
-if diff.has_changes:
-    print(f"Config changed: {diff.additions} additions, {diff.deletions} deletions")
+snapshots = SnapshotManager()
+
+# Capture a point-in-time snapshot
+snapshot = snapshots.capture(instance.id)
+
+# Later, diff against current state
+diff = snapshots.diff(snapshot.id, "current")
+for change in diff.changes:
+    print(f"  {change.path}: {change.old_value} → {change.new_value}")
 ```
 
-## CI/CD Integration
+## Gateway Client
 
-The Python SDK works great in CI/CD pipelines. Use it to validate that your gateway configuration matches your expected state:
+Connect directly to OpenClaw Gateway instances via WebSocket for real-time monitoring.
 
 ```python
-import sys
-from minions_openclaw import OpenClawClient
+from minions_openclaw import GatewayClient
 
-client = OpenClawClient(url="https://gateway.example.com")
-
-# Compare staging vs production
-diff = client.diff_instances("staging", "production")
-if diff.has_unexpected_changes:
-    print("ERROR: Unexpected config drift detected!")
-    sys.exit(1)
+async with GatewayClient(url="wss://gateway.prod.example.com") as client:
+    status = await client.get_status()
+    print(f"Gateway uptime: {status.uptime_seconds}s")
+    print(f"Active connections: {status.active_connections}")
 ```
 
 <Callout type="tip">
-Add this check as a step in your GitHub Actions workflow to catch configuration drift before it causes issues.
+The Python SDK uses `websockets` under the hood, making it compatible with any Python async framework including FastAPI, aiohttp, and Django Channels.
 </Callout>
 
-## Language Interoperability
+## Cross-Language Config Sync
 
-Both the TypeScript and Python SDKs use the same snapshot format and API protocol, so you can mix and match them in your workflow. Take a snapshot with the TypeScript CLI, restore it with the Python SDK — it all works seamlessly.
+One of the most powerful patterns is using both SDKs together — TypeScript for your web dashboard and Python for backend automation scripts.
 
-## Get Involved
+A snapshot captured from the TypeScript CLI can be restored using the Python SDK, and vice versa. The serialization format is identical.
 
-The Python SDK is open source and available on [PyPI](https://pypi.org/project/minions-openclaw/). We welcome contributions and feedback — check out the [GitHub repository](https://github.com/mxn2020/minions-openclaw) to get started.
+## Get Started
+
+Install the SDK, check out the [documentation](https://openclaw.minions.help), and start managing your gateways with confidence.
+
+```bash
+pip install minions-openclaw
+```

@@ -1,61 +1,76 @@
 ---
-title: "Introducing Minions OpenClaw: Gateway Management for AI Teams"
-description: "Why we built Minions OpenClaw, how it simplifies managing OpenClaw Gateway instances, and what config-as-code means for AI infrastructure."
+title: "Introducing Minions OpenClaw: Manage Your AI Gateways"
+description: "Why we built Minions OpenClaw, how it simplifies gateway management, and what you can do with snapshots and config decomposition."
 date: 2026-02-20
 author: "Mehdi Nabhani"
-tags: ["announcement", "architecture", "gateway"]
+tags: ["announcement", "gateway", "openclaw"]
 draft: false
 ---
 
-# Why Gateway Management Matters
+# Taking Control of Your AI Gateways
 
-Running an AI-powered application in production means managing infrastructure that is inherently stateful and configuration-heavy. OpenClaw Gateway instances hold routing rules, model assignments, rate-limit policies, and authentication tokens — and when you have multiple environments (dev, staging, production), keeping them in sync becomes a nightmare.
+Managing AI gateways — the infrastructure that routes, rate-limits, and secures LLM traffic — is one of the most operationally demanding parts of running an AI-powered product. Configuration sprawl, version drift, and zero visibility into what changed and when are the norm.
 
-**Minions OpenClaw** is a purpose-built toolkit for managing, monitoring, and version-controlling your OpenClaw Gateway instances.
+**Minions OpenClaw** changes that.
 
 <Callout type="info">
-Minions OpenClaw brings the "infrastructure as code" philosophy to your AI gateway stack — track changes, diff configurations, and roll back with confidence.
+Minions OpenClaw is an open-source project built on the Minions SDK that brings version control, monitoring, and declarative configuration to your OpenClaw Gateway instances.
 </Callout>
 
-## The Problem
+## The Gateway Management Problem
 
-Most teams manage gateway configurations through dashboards or ad-hoc scripts. This creates several pain points:
+A typical team operating AI gateways faces these pain points daily:
 
-- **Configuration drift** between environments
-- **No audit trail** for who changed what and when
-- **Risky deployments** — one wrong toggle and your production routing breaks
-- **Manual backup** processes that are easy to forget
+1. **Configuration drift** — Prod and staging configs diverge silently
+2. **No audit trail** — "Who changed the rate limit last Tuesday?"
+3. **Risky deployments** — One bad config change can break every downstream consumer
+4. **Multi-instance sprawl** — Managing 5+ gateway instances with different configs
 
-## How Minions OpenClaw Solves This
+## How Minions OpenClaw Helps
 
-### Config Snapshots
+### Instance Management
 
-Take a point-in-time snapshot of your entire gateway configuration. Snapshots are immutable, diffable, and can be restored at any time.
+Register and track all your OpenClaw Gateway instances from a single pane of glass.
 
 ```typescript
-import { OpenClawClient } from '@minions-openclaw/sdk';
+import { createMinionsOpenClaw } from '@minions-openclaw/sdk';
 
-const client = new OpenClawClient({ url: 'https://gateway.example.com' });
+const client = createMinionsOpenClaw();
 
-// Take a snapshot before making changes
-const snapshot = await client.createSnapshot({ label: 'pre-migration' });
-console.log(`Snapshot ${snapshot.id} created at ${snapshot.createdAt}`);
+// Register a gateway instance
+const instance = await client.instances.register({
+  name: 'production-us-east',
+  url: 'wss://gateway-us-east.example.com',
+  environment: 'production'
+});
+```
+
+### Snapshot System
+
+Capture point-in-time snapshots of your gateway configuration. Compare, diff, and restore at any time.
+
+```typescript
+// Capture current state
+const snapshot = await client.snapshots.capture(instance.id);
+
+// Later, compare with current state
+const diff = await client.snapshots.diff(snapshot.id, 'current');
+console.log(`${diff.changes.length} config changes detected`);
 ```
 
 ### Config Decomposition
 
-Instead of treating your gateway config as one giant blob, OpenClaw decomposes it into logical sections (routes, models, policies) that can be managed independently.
+Break monolithic gateway configs into manageable, auditable sections.
 
-### Multi-Instance Management
-
-Connect to multiple gateway instances from a single CLI session. Compare configurations across environments and promote changes from staging to production.
+```typescript
+const decomposed = await client.config.decompose(instance.id);
+// Returns: { routing: {...}, rateLimiting: {...}, auth: {...}, ... }
+```
 
 <Callout type="tip">
-Use `openclaw diff staging production` to see exactly what's different between environments before promoting changes.
+Config decomposition is especially powerful when combined with snapshots — you can track changes at the section level rather than diffing entire config blobs.
 </Callout>
 
 ## What's Next?
 
-The `@minions-openclaw/sdk` is available on NPM, along with a CLI tool and a web-based dashboard. We are actively developing the Python SDK for teams that prefer Python-based infrastructure tooling.
-
-We invite you to read the docs, try the CLI, and join us on GitHub!
+We're actively building the CLI (`@minions-openclaw/cli`), the Python SDK, and a full dashboard web app. Check out the [documentation](https://openclaw.minions.help) to get started, and join us on [GitHub](https://github.com/mxn2020/minions-openclaw)!
