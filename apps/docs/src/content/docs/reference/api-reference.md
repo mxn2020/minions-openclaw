@@ -1,6 +1,6 @@
 ---
 title: API Reference
-description: Full SDK API surface for @minions-openclaw/core — InstanceManager, SnapshotManager, ConfigDecomposer, and GatewayClient.
+description: Full SDK API surface for @minions-openclaw/sdk — InstanceManager, SnapshotManager, ConfigDecomposer, and GatewayClient.
 ---
 
 ## InstanceManager

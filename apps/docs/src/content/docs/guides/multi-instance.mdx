@@ -17,7 +17,7 @@ A single installation of `minions-openclaw` can manage any number of gateway ins
 <TabItem label="TypeScript">
 
 ```typescript
-import { InstanceManager } from '@minions-openclaw/core';
+import { InstanceManager } from '@minions-openclaw/sdk';
 
 const manager = new InstanceManager();
 
@@ -136,7 +136,7 @@ const prodConfig = await prodClient.getConfig();
 To see what differs between two live gateways, capture a snapshot from each and diff them:
 
 ```typescript
-import { SnapshotManager } from '@minions-openclaw/core';
+import { SnapshotManager } from '@minions-openclaw/sdk';
 
 const snapshots = new SnapshotManager();
 

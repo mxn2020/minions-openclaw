@@ -16,7 +16,7 @@ This document covers: manual backups, automated scheduled backups, exporting con
 A backup is simply a snapshot. Use `SnapshotManager.capture()` before any significant change:
 
 ```typescript
-import { InstanceManager, SnapshotManager, GatewayClient } from '@minions-openclaw/core';
+import { InstanceManager, SnapshotManager, GatewayClient } from '@minions-openclaw/sdk';
 
 const manager = new InstanceManager();
 const snapshots = new SnapshotManager();
@@ -45,7 +45,7 @@ Use a cron job or a gateway-side `openclaw-cron-job` to capture snapshots automa
 
 ```typescript
 import cron from 'node-cron';
-import { InstanceManager, SnapshotManager, GatewayClient } from '@minions-openclaw/core';
+import { InstanceManager, SnapshotManager, GatewayClient } from '@minions-openclaw/sdk';
 
 const manager = new InstanceManager();
 const snapshots = new SnapshotManager();
@@ -109,7 +109,7 @@ Commit these files to a separate Git repository for a full audit trail with hist
 `ConfigDecomposer.decompose()` breaks the flat config into typed minion objects, letting you export only the sections you care about:
 
 ```typescript
-import { ConfigDecomposer } from '@minions-openclaw/core';
+import { ConfigDecomposer } from '@minions-openclaw/sdk';
 
 const decomposer = new ConfigDecomposer();
 const snap = await snapshots.get('snap_abc123');

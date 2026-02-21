@@ -13,32 +13,10 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## RSA key generation
 
-Keys are generated automatically by `InstanceManager.register()`. If you need to generate them manually (e.g., for pre-provisioning or scripting), use the `generateKeyPair` utility:
+Keys are generated automatically by `InstanceManager.register()`. If you need to generate them manually (e.g., for pre-provisioning or scripting), use Node.js `crypto` or Python `cryptography` directly:
 
 <Tabs syncKey="lang">
 <TabItem label="TypeScript">
-
-```typescript
-import { generateKeyPair } from '@minions-openclaw/core';
-
-const { publicKey, privateKey } = await generateKeyPair();
-// publicKey  — PEM-encoded RSA public key (2048-bit)
-// privateKey — PEM-encoded RSA private key (2048-bit)
-```
-
-</TabItem>
-<TabItem label="Python">
-
-```python
-from minions_openclaw import generate_key_pair
-
-public_key, private_key = generate_key_pair()
-```
-
-</TabItem>
-</Tabs>
-
-### Using Node.js crypto directly
 
 ```typescript
 import { generateKeyPairSync } from 'node:crypto';
@@ -49,6 +27,30 @@ const { publicKey, privateKey } = generateKeyPairSync('rsa', {
   privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
 });
 ```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+from cryptography.hazmat.primitives.asymmetric import rsa, padding
+from cryptography.hazmat.primitives import serialization
+
+private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+public_key = private_key.public_key()
+
+public_pem = public_key.public_bytes(
+    serialization.Encoding.PEM,
+    serialization.PublicFormat.SubjectPublicKeyInfo,
+)
+private_pem = private_key.private_bytes(
+    serialization.Encoding.PEM,
+    serialization.PrivateFormat.PKCS8,
+    serialization.NoEncryption(),
+)
+```
+
+</TabItem>
+</Tabs>
 
 Key size of 2048 bits is the minimum. Use 4096 bits for higher-security environments.
 
@@ -113,7 +115,7 @@ Registration is a one-time operation per gateway instance. `InstanceManager.regi
 6. **Close temporary connection** — subsequent connections use the full 7-step authenticated handshake.
 
 ```typescript
-import { InstanceManager } from '@minions-openclaw/core';
+import { InstanceManager } from '@minions-openclaw/sdk';
 
 const manager = new InstanceManager();
 
@@ -144,16 +146,17 @@ The gateway treats this as a new device. If the old `deviceId` needs to be remov
 
 ## Verifying credentials manually
 
-To check that stored credentials are valid without a full connection:
+To check that stored credentials are valid without a full connection, use `ping` which performs a lightweight handshake:
 
 ```typescript
-import { verifyCredentials } from '@minions-openclaw/core';
+import { InstanceManager } from '@minions-openclaw/sdk';
 
-const result = await verifyCredentials(instance);
-if (result.valid) {
-  console.log('Credentials OK, device is registered on the gateway');
-} else {
-  console.error('Credentials invalid:', result.reason);
+const manager = new InstanceManager();
+try {
+  const { latencyMs, version } = await manager.ping(instance.id);
+  console.log(`Credentials OK — gateway v${version}, ${latencyMs}ms`);
+} catch (err) {
+  console.error('Credentials invalid:', err.message);
 }
 ```
 

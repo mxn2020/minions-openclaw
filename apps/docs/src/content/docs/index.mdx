@@ -14,7 +14,7 @@ hero:
       icon: external
 ---
 
-import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Card, CardGrid, LinkCard, Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Start Here
 
@@ -24,6 +24,8 @@ import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
   <LinkCard title="API Reference" description="Full TypeScript and Python SDK reference." href="/reference/api-reference/" />
   <LinkCard title="Gateway Setup" description="Step-by-step tutorial to get up and running." href="/tutorial/gateway-setup/" />
 </CardGrid>
+
+---
 
 ## Why OpenClaw Manager?
 
@@ -41,3 +43,68 @@ import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
     Compare any two configs or snapshots at the field level — instantly see what changed.
   </Card>
 </CardGrid>
+
+## Quick Example
+
+<Tabs syncKey="lang">
+<TabItem label="TypeScript">
+
+```typescript
+import { InstanceManager, SnapshotManager, GatewayClient } from '@minions-openclaw/sdk';
+
+// 1. Register a gateway instance
+const instances = new InstanceManager();
+const instance = await instances.register(
+  'my-gateway', 'ws://localhost:3001', 'my-secret-token'
+);
+
+// 2. Connect and fetch live state
+const client = new GatewayClient(
+  instance.fields.url as string,
+  instance.fields.token as string,
+);
+await client.openConnection();
+const presence = await client.fetchPresence();
+await client.close();
+
+// 3. Capture a snapshot
+const snapshots = new SnapshotManager();
+const snapshot = await snapshots.captureSnapshot(instance.id, presence);
+console.log('Snapshot ID:', snapshot.id);
+
+// 4. Compare two snapshots
+const diff = await snapshots.compare(snapshot.id, previousSnapshotId);
+console.log(diff);
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+import asyncio
+from minions_openclaw import InstanceManager, GatewayClient, SnapshotManager
+
+async def main():
+    # 1. Register a gateway instance
+    instances = InstanceManager()
+    instance = instances.register(
+        'my-gateway', 'ws://localhost:3001', token='my-secret-token'
+    )
+
+    # 2. Connect and fetch live state
+    client = GatewayClient(instance.fields['url'], token=instance.fields.get('token'))
+    await client.open_connection()
+    presence = await client.fetch_presence()
+    await client.close()
+
+    # 3. Capture a snapshot
+    snapshots = SnapshotManager()
+    snapshot = snapshots.capture_snapshot(instance.id, presence)
+    print('Snapshot ID:', snapshot.id)
+
+asyncio.run(main())
+```
+
+</TabItem>
+</Tabs>
+

@@ -1,6 +1,7 @@
 {
-  "name": "@minions-openclaw/docs",
+  "name": "minions-openclaw-docs",
   "version": "0.1.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "astro dev",
