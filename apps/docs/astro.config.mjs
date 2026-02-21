@@ -11,6 +11,14 @@ export default defineConfig({
     starlight({
       title: 'Minions OpenClaw',
       description: 'Manage, monitor, and version-control your OpenClaw Gateway instances.',
+      defaultLocale: 'root',
+      locales: {
+        root: { label: 'English', lang: 'en' },
+        de: { label: 'Deutsch', lang: 'de' },
+        es: { label: 'Español', lang: 'es' },
+        it: { label: 'Italiano', lang: 'it' },
+        fr: { label: 'Français', lang: 'fr' },
+      },
       head: [
         { tag: 'meta', attrs: { property: 'og:image', content: '/og-image.png' } },
       ],
