@@ -1,0 +1,45 @@
+---
+title: Minions OpenClaw
+description: Verwalten, überwachen und versionieren Sie Ihre OpenClaw Gateway-Instanzen.
+template: splash
+hero:
+  tagline: Verwalten, erfassen und vergleichen Sie Ihre OpenClaw Gateway-Instanzen — mit vollständiger Versionshistorie und Konfigurationszerlegung.
+  actions:
+    - text: Erste Schritte
+      link: /de/getting-started/introduction/
+      icon: right-arrow
+      variant: primary
+    - text: Auf GitHub ansehen
+      link: https://github.com/mxn2020/minions-openclaw
+      icon: external
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## Hier starten
+
+<CardGrid>
+  <LinkCard title="Einführung" description="Was ist der OpenClaw Manager und für wen ist er gedacht?" href="/de/getting-started/introduction/" />
+  <LinkCard title="Schnellstart" description="Registrieren Sie Ihre erste Instanz und erstellen Sie einen Snapshot." href="/de/getting-started/quick-start/" />
+  <LinkCard title="API-Referenz" description="Vollständige TypeScript- und Python-SDK-Referenz." href="/de/reference/api-reference/" />
+  <LinkCard title="Gateway-Setup" description="Schritt-für-Schritt-Anleitung zur Einrichtung." href="/de/tutorial/gateway-setup/" />
+</CardGrid>
+
+---
+
+## Warum OpenClaw Manager?
+
+<CardGrid stagger>
+  <Card title="Instanzregistrierung" icon="pencil">
+    Registrieren Sie jedes OpenClaw Gateway mit URL, Auth-Token und optionalem RSA-Geräteschlüssel.
+  </Card>
+  <Card title="Snapshot-System" icon="add-document">
+    Erfassen Sie den Zustand zu einem bestimmten Zeitpunkt und durchlaufen Sie die Versionskette — verlieren Sie nie wieder eine Konfiguration.
+  </Card>
+  <Card title="Konfigurationszerlegung" icon="approve-check">
+    Zerlegen Sie Gateway-JSON in typisierte Minions und setzen Sie es wieder zusammen — ohne manuelles Eingreifen.
+  </Card>
+  <Card title="Konfigurationsvergleich" icon="setting">
+    Vergleichen Sie zwei beliebige Konfigurationen oder Snapshots auf Feldebene — sehen Sie sofort, was sich geändert hat.
+  </Card>
+</CardGrid>

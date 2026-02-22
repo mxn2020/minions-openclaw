@@ -1,0 +1,45 @@
+---
+title: Minions OpenClaw
+description: Gestisci, monitora e controlla le versioni delle tue istanze OpenClaw Gateway.
+template: splash
+hero:
+  tagline: Gestisci, cattura e confronta le tue istanze OpenClaw Gateway — con cronologia completa delle versioni e decomposizione della configurazione.
+  actions:
+    - text: Inizia
+      link: /it/getting-started/introduction/
+      icon: right-arrow
+      variant: primary
+    - text: Vedi su GitHub
+      link: https://github.com/mxn2020/minions-openclaw
+      icon: external
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## Inizia qui
+
+<CardGrid>
+  <LinkCard title="Introduzione" description="Cos'è OpenClaw Manager e a chi è destinato?" href="/it/getting-started/introduction/" />
+  <LinkCard title="Avvio rapido" description="Registra la tua prima istanza e cattura uno snapshot." href="/it/getting-started/quick-start/" />
+  <LinkCard title="Riferimento API" description="Riferimento completo degli SDK TypeScript e Python." href="/it/reference/api-reference/" />
+  <LinkCard title="Configurazione Gateway" description="Tutorial passo dopo passo per iniziare." href="/it/tutorial/gateway-setup/" />
+</CardGrid>
+
+---
+
+## Perché OpenClaw Manager?
+
+<CardGrid stagger>
+  <Card title="Registro istanze" icon="pencil">
+    Registra qualsiasi OpenClaw Gateway con URL, token di autenticazione e chiave RSA opzionale.
+  </Card>
+  <Card title="Sistema di snapshot" icon="add-document">
+    Cattura lo stato in un momento preciso e percorri la catena delle versioni — non perdere mai più una configurazione.
+  </Card>
+  <Card title="Decomposizione configurazione" icon="approve-check">
+    Decomponi il JSON del gateway in Minions tipizzati e ricomponilo — senza manipolazione manuale.
+  </Card>
+  <Card title="Confronto configurazione" icon="setting">
+    Confronta due configurazioni o snapshot a livello di campo — vedi subito cosa è cambiato.
+  </Card>
+</CardGrid>

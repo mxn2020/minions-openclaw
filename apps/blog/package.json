@@ -1,5 +1,5 @@
 {
-    "name": "minions-openclaw-blog",
+    "name": "@minions-openclaw/blog",
     "version": "0.1.0",
     "private": true,
     "type": "module",

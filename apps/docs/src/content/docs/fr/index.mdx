@@ -1,0 +1,45 @@
+---
+title: Minions OpenClaw
+description: Gérez, surveillez et versionnez vos instances OpenClaw Gateway.
+template: splash
+hero:
+  tagline: Gérez, capturez et comparez vos instances OpenClaw Gateway — avec un historique complet des versions et une décomposition de configuration.
+  actions:
+    - text: Commencer
+      link: /fr/getting-started/introduction/
+      icon: right-arrow
+      variant: primary
+    - text: Voir sur GitHub
+      link: https://github.com/mxn2020/minions-openclaw
+      icon: external
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## Commencez ici
+
+<CardGrid>
+  <LinkCard title="Introduction" description="Qu'est-ce qu'OpenClaw Manager et à qui s'adresse-t-il ?" href="/fr/getting-started/introduction/" />
+  <LinkCard title="Démarrage rapide" description="Enregistrez votre première instance et prenez un snapshot." href="/fr/getting-started/quick-start/" />
+  <LinkCard title="Référence API" description="Référence complète des SDK TypeScript et Python." href="/fr/reference/api-reference/" />
+  <LinkCard title="Configuration du Gateway" description="Tutoriel étape par étape pour démarrer." href="/fr/tutorial/gateway-setup/" />
+</CardGrid>
+
+---
+
+## Pourquoi OpenClaw Manager ?
+
+<CardGrid stagger>
+  <Card title="Registre d'instances" icon="pencil">
+    Enregistrez n'importe quel OpenClaw Gateway avec une URL, un jeton d'authentification et une clé RSA optionnelle.
+  </Card>
+  <Card title="Système de snapshots" icon="add-document">
+    Capturez l'état à un instant donné et parcourez la chaîne de versions — ne perdez plus jamais une configuration.
+  </Card>
+  <Card title="Décomposition de configuration" icon="approve-check">
+    Décomposez le JSON du gateway en Minions typés et recomposez-le — sans manipulation manuelle.
+  </Card>
+  <Card title="Comparaison de configuration" icon="setting">
+    Comparez deux configurations ou snapshots au niveau des champs — voyez instantanément ce qui a changé.
+  </Card>
+</CardGrid>
