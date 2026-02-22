@@ -9,6 +9,7 @@ export default defineConfig({
   site: siteUrl,
   integrations: [
     starlight({
+      customCss: ['./src/styles/custom.css'],
       title: 'Minions OpenClaw',
       description: 'Manage, monitor, and version-control your OpenClaw Gateway instances.',
       defaultLocale: 'root',

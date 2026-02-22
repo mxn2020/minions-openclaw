@@ -1,5 +1,5 @@
 {
-  "name": "@minions-openclaw/web",
+  "name": "minions-openclaw-web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
