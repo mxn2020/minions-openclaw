@@ -9,7 +9,7 @@ export const openclawInstanceType: MinionType = {
   slug: 'openclaw-instance',
   description: 'A registered OpenClaw Gateway instance',
   icon: '🔗',
-  color: '#4F46E5',
+  color: '#2A9D8F',
   schema: [
     { name: 'url', type: 'string', required: true, label: 'Gateway URL (ws:// or wss://)' },
     { name: 'token', type: 'string', required: false, label: 'Auth Token' },

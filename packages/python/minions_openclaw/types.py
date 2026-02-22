@@ -11,7 +11,7 @@ openclaw_instance_type = MinionType(
     slug='openclaw-instance',
     description='A registered OpenClaw Gateway instance',
     icon='🔗',
-    color='#4F46E5',
+    color='#2A9D8F',
     schema=[
         FieldDefinition('url', 'url', required=True, label='URL'),
         FieldDefinition('token', 'string', label='Auth Token'),
