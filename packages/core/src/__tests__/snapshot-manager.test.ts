@@ -12,7 +12,6 @@ function makeSnapshotMinion(fields: Record<string, unknown>, overrides?: Partial
         tags: [],
         createdAt: now(),
         updatedAt: now(),
-        version: 1,
         ...overrides,
     };
 }
