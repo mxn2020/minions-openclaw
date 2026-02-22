@@ -75,7 +75,7 @@ export default function Hero() {
                                 <span className="text-xs text-muted ml-2 font-mono">terminal</span>
                             </div>
                             {/* Terminal Content */}
-                            <div className="p-6 font-mono text-sm space-y-4">
+                            <div className="p-6 font-mono text-sm space-y-4 overflow-x-auto whitespace-nowrap">
                                 <div className="flex items-start gap-2">
                                     <Terminal className="w-4 h-4 text-accent mt-0.5 shrink-0" />
                                     <div>
