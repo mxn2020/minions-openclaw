@@ -6,3 +6,4 @@ description: TypeScript SDK for managing OpenClaw Gateway instances with minions
 priority: high
 deploy_url: null
 tags: null
+category: minion-toolbox
