@@ -1,0 +1,8 @@
+name: "@minions-openclaw/docs"
+project_scope: child
+child_type: docs
+parent_project: minions-openclaw
+description: "Standard compliance definition for @minions-openclaw/docs"
+priority: high
+deploy_url: null
+tags: null

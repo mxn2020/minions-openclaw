@@ -1,0 +1,8 @@
+name: "@minions-openclaw/cli"
+project_scope: child
+child_type: cli
+parent_project: minions-openclaw
+description: CLI tool for managing OpenClaw Gateway instances
+priority: high
+deploy_url: null
+tags: null

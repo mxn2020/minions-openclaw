@@ -16,9 +16,23 @@
     "deploy:web": "pnpm --filter @minions-openclaw/web run build && netlify deploy --dir apps/web/dist --prod",
     "test": "pnpm --filter @minions-openclaw/sdk run test",
     "lint": "pnpm --filter @minions-openclaw/sdk run build && pnpm --filter @minions-openclaw/sdk run lint && pnpm --filter @minions-openclaw/cli run lint",
-    "deploy": "pnpm run deploy:blog"
+    "deploy": "pnpm run deploy:blog",
+    "dev": "echo 'no dev'",
+    "stop": "pkill -f 'node.*minions-openclaw' || true"
   },
   "engines": {
     "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mxn2020/minions"
+  },
+  "keywords": [
+    "minions",
+    "ecosystem",
+    "compliance"
+  ],
+  "devDependencies": {
+    "vitest": "^4.0.0"
   }
 }

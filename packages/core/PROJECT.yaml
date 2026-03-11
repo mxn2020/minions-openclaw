@@ -1,0 +1,8 @@
+name: "@minions-openclaw/sdk"
+project_scope: child
+child_type: sdk
+parent_project: minions-openclaw
+description: TypeScript SDK for managing OpenClaw Gateway instances with minions-sdk
+priority: high
+deploy_url: null
+tags: null
