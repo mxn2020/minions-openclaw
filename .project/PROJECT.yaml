@@ -1,0 +1,16 @@
+name: minions-openclaw
+project_scope: main
+project_type: monorepo
+description: Manage, monitor, and version-control your OpenClaw Gateway instances
+tier: prototype
+lane: minions-platform
+priority: medium
+oss: true
+stack: ["typescript"]
+repo: "https://github.com/mxn2020/minions-openclaw"
+deploy_url: null
+last_active: 2026-03-11
+tags: ["minions-openclaw", "minions", "toolbox"]
+notes: null
+id: null
+category: minion-toolbox
